@@ -222,6 +222,7 @@
                 </dependency>
             </dependencies>
         </profile>
+        <!--
         <profile>
             <id>jdbc-mssql</id>
             <activation>
@@ -237,7 +238,7 @@
                </dependency>
             </dependencies>
         </profile>
-
+        -->
         <profile>
             <id>skinny-war</id>
             <activation>
