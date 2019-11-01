@@ -9,14 +9,20 @@ import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.Title;
 
 import domainapp.modules.simple.dom.impl.enums.TipoJerarquia;
+import static org.apache.isis.applib.annotation.CommandReification.ENABLED;
+import static org.apache.isis.applib.annotation.SemanticsOf.IDEMPOTENT;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
@@ -127,6 +133,114 @@ public class Persona implements Comparable<Persona> {
         this.dni=dni;
         this.jerarquia=jerarquia;
     }
+
+    /**
+     * Este metodo realiza la actualizacion de la variable nombre de la entidad Persona
+     *
+     * @param nombre
+     * @return Persona
+     */
+    @Action(semantics = IDEMPOTENT, command = ENABLED, publishing = Publishing.ENABLED, associateWith = "nombre")
+    public Persona updateNombre(
+            @Parameter(maxLength = 40)
+            @ParameterLayout(named = "Nombre")
+            final String nombre) {
+        setNombre(nombre);
+        return this;
+    }
+
+    /**
+     * Este metodo realiza la actualizacion de la variable apellido de la entidad Persona
+     *
+     * @param apellido
+     * @return Persona
+     */
+    @Action(semantics = IDEMPOTENT, command = ENABLED, publishing = Publishing.ENABLED, associateWith = "apellido")
+    public Persona updateApellido(
+            @Parameter(maxLength = 40)
+            @ParameterLayout(named = "Apellido")
+            final String apellido) {
+        setApellido(apellido);
+        return this;
+    }
+
+    /**
+     * Este metodo realiza la actualizacion de la variable direccion de la entidad Persona
+     *
+     * @param direccion
+     * @return Persona
+     */
+    @Action(semantics = IDEMPOTENT, command = ENABLED, publishing = Publishing.ENABLED, associateWith = "direccion")
+    public Persona updateDireccion(
+            @Parameter(maxLength = 40)
+            @ParameterLayout(named = "Direccion")
+            final String direccion) {
+        setDireccion(direccion);
+        return this;
+    }
+
+    /**
+     * Este metodo realiza la actualizacion de la variable telefono de la entidad Persona
+     *
+     * @param telefono
+     * @return Persona
+     */
+    @Action(semantics = IDEMPOTENT, command = ENABLED, publishing = Publishing.ENABLED, associateWith = "telefono")
+    public Persona updateTelefono(
+            @Parameter(maxLength = 40)
+            @ParameterLayout(named = "Telefono")
+            final String telefono) {
+        setTelefono(telefono);
+        return this;
+    }
+
+    /**
+     * Este metodo realiza la actualizacion de la variable email de la entidad Persona
+     *
+     * @param email
+     * @return Persona
+     */
+    @Action(semantics = IDEMPOTENT, command = ENABLED, publishing = Publishing.ENABLED, associateWith = "email")
+    public Persona updateEmail(
+            @Parameter(maxLength = 40)
+            @ParameterLayout(named = "Email")
+            final String email) {
+        setEmail(email);
+        return this;
+    }
+
+
+    /**
+     * Este metodo realiza la actualizacion de la variable dni de la entidad Persona
+     *
+     * @param dni
+     * @return Persona
+     */
+    @Action(semantics = IDEMPOTENT, command = ENABLED, publishing = Publishing.ENABLED, associateWith = "dni")
+    public Persona updateDni(
+            @Parameter(maxLength = 40)
+            @ParameterLayout(named = "Dni")
+            final String dni) {
+        setEmail(dni);
+        return this;
+    }
+
+    /**
+     * Este metodo realiza la actualizacion de la variable jerarquia de la entidad Persona
+     *
+     * @param jerarquia
+     * @return Persona
+     */
+    @Action(semantics = IDEMPOTENT, command = ENABLED, publishing = Publishing.ENABLED, associateWith = "jerarquia")
+    public TipoJerarquia updateJerarquia(
+            @Parameter(maxLength = 40)
+            @ParameterLayout(named = "Jerarquias")
+            final TipoJerarquia jerarquia) {
+        setJerarquia(jerarquia);
+        return jerarquia;
+    }
+
+
     //region > compareTo, toString
     @Override
     public int compareTo(final Persona other) {
