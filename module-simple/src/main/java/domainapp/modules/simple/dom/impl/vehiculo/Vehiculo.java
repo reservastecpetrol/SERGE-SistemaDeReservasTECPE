@@ -20,6 +20,7 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.services.i18n.TranslatableString;
 
 import domainapp.modules.simple.dom.impl.enums.EstadoVehiculo;
 import static org.apache.isis.applib.annotation.CommandReification.ENABLED;
@@ -280,7 +281,87 @@ public class Vehiculo implements Comparable<Vehiculo> {
         return this;
     }
 
+    public String default0UpdateMatricula() {
+        return getMatricula();
+    }
 
+
+    /**
+     * Este metodo realiza la validacion de la variable matricula
+     * de forma que el usuario no ingrese un signo de exclamacion
+     *
+     * @param matricula
+     * @return TranslatableString
+     */
+    public TranslatableString validate0UpdateMatricula(final String matricula) {
+        return matricula != null && matricula.contains("!") ? TranslatableString.tr("Exclamation mark is not allowed") : null;
+    }
+
+    public String default0UpdateMarca() {
+        return getMarca();
+    }
+
+
+    /**
+     * Este metodo realiza la validacion de la variable marca
+     * de forma que el usuario no ingrese un signo de exclamacion
+     *
+     * @param marca
+     * @return TranslatableString
+     */
+    public TranslatableString validate0UpdateMarca(final String marca) {
+        return marca != null && marca.contains("!") ? TranslatableString.tr("Exclamation mark is not allowed") : null;
+    }
+
+
+    /**
+     * Este metodo realiza la validacion de la variable color
+     * de forma que el usuario no ingrese un signo de exclamacion
+     *
+     * @param color
+     * @return TranslatableString
+     */
+    public TranslatableString validate0UpdateColor(final String color) {
+        return color != null && color.contains("!") ? TranslatableString.tr("Exclamation mark is not allowed") : null;
+    }
+
+
+    /**
+     * Este metodo realiza la validacion de la variable modelo
+     * de forma que el usuario no ingrese un signo de exclamacion
+     *
+     * @param modelo
+     * @return TranslatableString
+     */
+    public TranslatableString validate0UpdateModelo(final String modelo) {
+        return modelo != null && modelo.contains("!") ? TranslatableString.tr("Exclamation mark is not allowed") : null;
+    }
+
+
+    /**
+     * Este metodo realiza la validacion de la variable ubicacion
+     * de forma que el usuario no ingrese un signo de exclamacion
+     *
+     * @param ubicacion
+     * @return TranslatableString
+     */
+    public TranslatableString validate0UpdateUbicacion(final String ubicacion) {
+        return ubicacion != null && ubicacion.contains("!") ? TranslatableString.tr("Exclamation mark is not allowed") : null;
+    }
+
+
+    /**
+     * Este metodo realiza la validacion de la variable estado
+     * de forma que el usuario no ingrese un signo de exclamacion
+     *
+     * @param estado
+     * @return TranslatableString
+     */
+    public TranslatableString validate0UpdateEstado(final String estado) {
+        return estado != null && estado.contains("!") ? TranslatableString.tr("Exclamation mark is not allowed") : null;
+    }
+
+    
     //region > compareTo, toString
     @Override
     public int compareTo(final Vehiculo other) {
