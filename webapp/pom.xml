@@ -211,14 +211,14 @@
             <id>jdbc-postgres</id>
             <activation>
                 <property>
-                    <name>jdbc-postgres</name>
+                    <name>!skip.jdbc-postgres</name>
                 </property>
             </activation>
             <dependencies>
                 <dependency>
-                    <groupId>postgresql</groupId>
+                    <groupId>org.postgresql</groupId>
                     <artifactId>postgresql</artifactId>
-                    <version>9.1-901.jdbc4</version>
+                    <version>42.2.5</version>
                 </dependency>
             </dependencies>
         </profile>
