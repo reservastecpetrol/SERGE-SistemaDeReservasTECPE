@@ -19,6 +19,7 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.services.i18n.TranslatableString;
 
 import domainapp.modules.simple.dom.impl.enums.TipoJerarquia;
 import static org.apache.isis.applib.annotation.CommandReification.ENABLED;
@@ -240,6 +241,61 @@ public class Persona implements Comparable<Persona> {
         return jerarquia;
     }
 
+    public String default0UpdateNombre() {
+        return getNombre();
+    }
+
+
+    /**
+     * Este metodo realiza la validacion de la variable nombre
+     * de forma que el usuario no ingrese un signo de exclamacion
+     *
+     * @param nombre
+     * @return TranslatableString
+     */
+    public TranslatableString validate0UpdateNombre(final String nombre) {
+        return nombre != null && nombre.contains("!") ? TranslatableString.tr("Exclamation mark is not allowed") : null;
+    }
+
+
+    public String default0UpdateApellido() {
+        return getApellido();
+    }
+
+
+    /**
+     * Este metodo realiza la validacion de la variable apellido
+     * de forma que el usuario no ingrese un signo de exclamacion
+     *
+     * @param apellido
+     * @return TranslatableString
+     */
+    public TranslatableString validate0UpdateApellido(final String apellido) {
+        return apellido != null && apellido.contains("!") ? TranslatableString.tr("Exclamation mark is not allowed") : null;
+    }
+
+
+    /**
+     * Este metodo realiza la validacion de la variable direccion
+     * de forma que el usuario no ingrese un signo de exclamacion
+     *
+     * @param direccion
+     * @return TranslatableString
+     */
+    public TranslatableString validate0UpdateDireccion(final String direccion) {
+        return direccion != null && direccion.contains("!") ? TranslatableString.tr("Exclamation mark is not allowed") : null;
+    }
+
+    /**
+     * Este metodo realiza la validacion de la variable telefono
+     * de forma que el usuario no ingrese un signo de exclamacion
+     *
+     * @param telefono
+     * @return TranslatableString
+     */
+    public TranslatableString validate0UpdateTelefono(final String telefono) {
+        return telefono != null && telefono.contains("!") ? TranslatableString.tr("Exclamation mark is not allowed") : null;
+    }
 
     //region > compareTo, toString
     @Override
