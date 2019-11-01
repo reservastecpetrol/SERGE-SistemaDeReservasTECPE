@@ -87,6 +87,19 @@ public class VehiculoRepository {
     }
 
     @Programmatic
+    public Vehiculo verificarVehiculo(String matricula){
+
+        TypesafeQuery<Vehiculo> q = isisJdoSupport.newTypesafeQuery(Vehiculo.class);
+        final QVehiculo cand = QVehiculo.candidate();
+
+        q= q.filter(
+                cand.matricula.eq(q.stringParameter("matriculaIngresada"))
+        );
+        return  q.setParameter("matriculaIngresada",matricula)
+                .executeUnique();
+    }
+
+    @Programmatic
     public Vehiculo findByMatricula(
             final String matricula
     ) {
