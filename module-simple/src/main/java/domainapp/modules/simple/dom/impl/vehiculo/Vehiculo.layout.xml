@@ -16,8 +16,32 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="General">
-                                <cpt:property id="matricula">
-                                    <cpt:action id="updateMatricula"/>
+                                <cpt:action id="delete">
+                                    <cpt:describedAs>Deletes this object from the persistent datastore</cpt:describedAs>
+                                </cpt:action>
+                                <cpt:property id="matricula" namedEscaped="true">
+                                    <cpt:action id="updateMatricula" promptStyle="INLINE"/>
+                                </cpt:property>
+                                <cpt:property id="marca" namedEscaped="true">
+                                    <cpt:action id="updateMarca" promptStyle="INLINE"/>
+                                </cpt:property>
+                                <cpt:property id="color" namedEscaped="true">
+                                    <cpt:action id="updateColor" promptStyle="INLINE"/>
+                                </cpt:property>
+                                <cpt:property id="modelo" namedEscaped="true">
+                                    <cpt:action id="updateModelo" promptStyle="INLINE"/>
+                                </cpt:property>
+                                <cpt:property id="combustible" namedEscaped="true">
+                                    <cpt:action id="updateCombustible" promptStyle="INLINE"/>
+                                </cpt:property>
+                                <cpt:property id="seguro" namedEscaped="true">
+                                    <cpt:action id="updateSeguro" promptStyle="INLINE"/>
+                                </cpt:property>
+                                <cpt:property id="ubicacion" namedEscaped="true">
+                                    <cpt:action id="updateUbicacion" promptStyle="INLINE"/>
+                                </cpt:property>
+                                <cpt:property id="estado" namedEscaped="true">
+                                    <cpt:action id="updateEstado" promptStyle="INLINE"/>
                                 </cpt:property>
                             </cpt:fieldSet>
                         </bs3:col>
