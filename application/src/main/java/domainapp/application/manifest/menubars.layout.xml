@@ -33,6 +33,20 @@
                 </mb3:serviceAction>
             </mb3:section>
         </mb3:menu>
+        <mb3:menu>
+            <mb3:named>Personas</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="simple.SimplePersonaMenu" id="crearPersona">
+                    <cpt:named>Crear Persona</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="simple.SimplePersonaMenu" id="buscarPersonaPorNombre">
+                    <cpt:named>Buscar Persona por Nombre</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="simple.SimplePersonaMenu" id="listarPersonas">
+                    <cpt:named>Listar Personas</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
         <mb3:menu unreferencedActions="true">
             <mb3:named>Other</mb3:named>
         </mb3:menu>
