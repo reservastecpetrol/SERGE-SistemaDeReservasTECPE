@@ -78,6 +78,15 @@ import domainapp.modules.simple.dom.impl.persona.Persona;
  */
 public class ReservaHabitacion implements Comparable<ReservaHabitacion> {
 
+    /**
+     * Identificacion del nombre del icono que aparecera en la UI
+     *
+     * @return String
+     */
+    public String iconName() {
+        return "Reserva";
+    }
+
     //Definicion de las propiedades de la entidad ReservaHabitacion
 
     @javax.jdo.annotations.Column(allowsNull = "false")
