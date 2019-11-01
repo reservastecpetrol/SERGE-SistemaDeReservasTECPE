@@ -10,14 +10,20 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.Title;
 
 import domainapp.modules.simple.dom.impl.enums.EstadoVehiculo;
+import static org.apache.isis.applib.annotation.CommandReification.ENABLED;
+import static org.apache.isis.applib.annotation.SemanticsOf.IDEMPOTENT;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
@@ -140,6 +146,138 @@ public class Vehiculo implements Comparable<Vehiculo> {
         this.seguro=seguro;
         this.ubicacion=ubicacion;
         this.estado=estado;
+    }
+
+    /**
+     *
+     * Este metodo realiza la actualizacion de la variable matricula
+     *
+     * @param matricula
+     * @return Vehiculo
+     */
+    @Action(semantics = IDEMPOTENT, command = ENABLED, publishing = Publishing.ENABLED, associateWith = "matricula")
+    public Vehiculo updateMatricula(
+            @Parameter(maxLength = 40)
+            @ParameterLayout(named = "Matricula")
+            final String matricula) {
+        setMatricula(matricula);
+        return this;
+    }
+
+
+    /**
+     *
+     * Este metodo realiza la actualizacion de la variable marca
+     *
+     * @param marca
+     * @return Vehiculo
+     */
+    @Action(semantics = IDEMPOTENT, command = ENABLED, publishing = Publishing.ENABLED, associateWith = "marca")
+    public Vehiculo updateMarca(
+            @Parameter(maxLength = 40)
+            @ParameterLayout(named = "Marca")
+            final String marca) {
+        setMarca(marca);
+        return this;
+    }
+
+
+    /**
+     *
+     * Este metodo realiza la actualizacion de la variable modelo
+     *
+     * @param modelo
+     * @return Vehiculo
+     */
+    @Action(semantics = IDEMPOTENT, command = ENABLED, publishing = Publishing.ENABLED, associateWith = "modelo")
+    public Vehiculo updateModelo(
+            @Parameter(maxLength = 40)
+            @ParameterLayout(named = "Modelo")
+            final String modelo) {
+        setModelo(modelo);
+        return this;
+    }
+
+
+    /**
+     *
+     * Este metodo realiza la actualizacion de la variable color
+     *
+     * @param color
+     * @return Vehiculo
+     */
+    @Action(semantics = IDEMPOTENT, command = ENABLED, publishing = Publishing.ENABLED, associateWith = "color")
+    public Vehiculo updateColor(
+            @Parameter(maxLength = 40)
+            @ParameterLayout(named = "Color")
+            final String color) {
+        setColor(color);
+        return this;
+    }
+
+
+    /**
+     *
+     * Este metodo realiza la actualizacion de la variable combustible
+     *
+     * @param combustible
+     * @return Vehiculo
+     */
+    @Action(semantics = IDEMPOTENT, command = ENABLED, publishing = Publishing.ENABLED, associateWith = "combustible")
+    public Vehiculo updateCombustible(
+            @ParameterLayout(named = "Combustible")
+            final boolean combustible) {
+        setCombustible(combustible);
+        return this;
+    }
+
+
+    /**
+     *
+     * Este metodo realiza la actualizacion de la variable seguro
+     *
+     * @param seguro
+     * @return Vehiculo
+     */
+    @Action(semantics = IDEMPOTENT, command = ENABLED, publishing = Publishing.ENABLED, associateWith = "seguro")
+    public Vehiculo updateSeguro(
+            @ParameterLayout(named = "Seguro")
+            final boolean seguro) {
+        setSeguro(seguro);
+        return this;
+    }
+
+
+    /**
+     *
+     * Este metodo realiza la actualizacion de la variable ubicacion
+     *
+     * @param ubicacion
+     * @return Vehiculo
+     */
+    @Action(semantics = IDEMPOTENT, command = ENABLED, publishing = Publishing.ENABLED, associateWith ="ubicacion")
+    public Vehiculo updateUbicacion(
+            @Parameter(maxLength = 40)
+            @ParameterLayout(named = "Ubicacion")
+            final String ubicacion) {
+        setUbicacion(ubicacion);
+        return this;
+    }
+
+
+    /**
+     * Este metodo realiza la actualizacion de la variable estado
+     *
+     * @param estado
+     * @return Vehiculo
+     */
+    @Action(semantics = IDEMPOTENT, command = ENABLED, publishing = Publishing.ENABLED, associateWith ="estado")
+    public Vehiculo updateEstado(
+            @Parameter(maxLength = 40)
+            @ParameterLayout(named = "estado")
+            final EstadoVehiculo estado) {
+        setEstado(estado);
+        return this;
     }
 
 
