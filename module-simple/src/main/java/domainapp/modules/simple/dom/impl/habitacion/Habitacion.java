@@ -1,6 +1,5 @@
 package domainapp.modules.simple.dom.impl.habitacion;
 
-import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -16,13 +15,14 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Title;
 
-import lombok.Getter;
-import lombok.Setter;
+import domainapp.modules.simple.dom.impl.enums.EstadoHabitacion;
+import domainapp.modules.simple.dom.impl.enums.TipoHabitacion;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
-        schema = "habitacion",
+        schema = "simple",
         table = "Habitacion"
 )
 @DatastoreIdentity(
@@ -54,12 +54,71 @@ import lombok.Setter;
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
 )
+@lombok.Getter @lombok.Setter
+
+/**
+ * Esta clase define la entidad de dominio Habitacion
+ * con todas sus propiedades.
+ * Ademas de metodos que realizan
+ * Validacion de propiedades
+ * Actualizacion de propiedades
+ * Eliminar una entidad de Habitacion
+ * Un metodo Constructor
+ *Metodos para modificar los estados de la entidad Habitacion
+ *
+ *
+ * @author Francisco Bellani
+ *
+ */
 public class Habitacion implements Comparable<Habitacion> {
 
-    @Column(allowsNull = "false")
-    @Property()
-    @Getter @Setter
-    private String nombre;
+    //Definicion de las propiedades de la entidad Habitacion
+
+    @javax.jdo.annotations.Column(allowsNull = "false", length = 40)
+    @lombok.NonNull
+    @Property() // editing disabled by default, see isis.properties
+    @Title(prepend = "Habitacion: ")
+    private String nombre;  //esta variable hace referencia al numero que identifica a la entidad Habitacion
+
+    @javax.jdo.annotations.Column(allowsNull = "false", length = 40)
+    @lombok.NonNull
+    @Property(editing = Editing.ENABLED)
+    private String ubicacion;   //esta variable hace referencia a la ubicacion en que se encuentra la entidad Habitacion
+
+    @javax.jdo.annotations.Column(allowsNull = "true", length = 40)
+    @lombok.NonNull
+    @Property(editing = Editing.ENABLED)
+    // esta variable hace referencia al estado en el que se encuentra la entidad Habiatcion
+    // los cuales pueden ser :
+    // DISPONIBLE|| OCUPADA || MANTENIMIENTO|| INACTIVA
+    private EstadoHabitacion estado;
+
+
+    // esta variable hace referencia al tipo de categoria a la que pertenece la entidad Habitacion
+    // Ejecutivas || Estandar || Simple
+    @javax.jdo.annotations.Column(allowsNull="true")
+    @lombok.NonNull
+    @Property(editing = Editing.ENABLED)
+    private TipoHabitacion categoria;
+
+    public Habitacion(){}
+
+    /**
+     * Este es un metodo constructor
+     *
+     *
+     * @param nombre -valor ingresado por el usuario
+     * @param ubicacion -valor ingresado por el usuario
+     * @param categoria -valor ingresado por el usuario
+     * @param estado  -valor definido en el codigo
+     */
+    Habitacion(String nombre,String ubicacion, TipoHabitacion categoria,EstadoHabitacion estado){
+        this.nombre=nombre;
+        this.ubicacion=ubicacion;
+        this.categoria=categoria;
+        this.estado=estado;
+    }
+
 
     //region > compareTo, toString
     @Override
