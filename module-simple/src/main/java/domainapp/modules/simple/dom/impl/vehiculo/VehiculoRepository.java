@@ -2,6 +2,8 @@ package domainapp.modules.simple.dom.impl.vehiculo;
 
 import java.util.List;
 
+import org.datanucleus.query.typesafe.TypesafeQuery;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -9,12 +11,14 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import domainapp.modules.simple.dom.impl.enums.EstadoVehiculo;
 import lombok.AccessLevel;
 
 @DomainService(
@@ -59,6 +63,29 @@ public class VehiculoRepository {
     public List<Vehiculo> listarVehiculos() {
         return repositoryService.allInstances(Vehiculo.class);
     }
+
+    /**
+     * Este metodo permite recuperar en una lista todos los Vehiculos
+     * dado un estado en particular
+     *
+     * @param estado
+     * @return List<Vehiculo>
+     */
+    @Programmatic
+    public List<Vehiculo> listarVehiculosPorEstado(
+            @ParameterLayout(named="Estado")
+            final EstadoVehiculo estado
+    ) {
+        TypesafeQuery<Vehiculo> tq = isisJdoSupport.newTypesafeQuery(Vehiculo.class);
+        final QVehiculo cand = QVehiculo.candidate();
+
+        List<Vehiculo> vehiculos = tq.filter(
+                cand.estado.eq(tq.stringParameter("estado")))
+                .setParameter("estado",estado).executeList();
+
+        return vehiculos;
+    }
+
     @Programmatic
     public Vehiculo findByMatricula(
             final String matricula
