@@ -39,6 +39,15 @@ import lombok.AccessLevel;
 public class VehiculoRepository {
 
     /**
+     * Identificacion del nombre del icono que aparecera en la UI
+     *
+     * @return String
+     */
+    public String iconName() {
+        return "Vehiculo";
+    }
+
+    /**
      * Este metodo lista todos los Vehiculos que hay cargados
      * en el sistema
      *
