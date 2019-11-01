@@ -10,6 +10,15 @@ import org.apache.isis.applib.annotation.Programmatic;
 )
 public class PersonaRepository {
 
+    /**
+     * Identificacion del nombre del icono que aparecera en la UI
+     *
+     * @return String
+     */
+    public String iconName() {
+        return "Persona";
+    }
+
     @Programmatic
     public java.util.List<Persona> listAll() {
         return container.allInstances(Persona.class);
