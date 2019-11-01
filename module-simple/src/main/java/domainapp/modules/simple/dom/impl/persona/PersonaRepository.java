@@ -2,12 +2,15 @@ package domainapp.modules.simple.dom.impl.persona;
 
 import java.util.List;
 
+import org.datanucleus.query.typesafe.TypesafeQuery;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
@@ -43,26 +46,28 @@ public class PersonaRepository {
     public List<Persona> listarPersonas() {
         return repositoryService.allInstances(Persona.class);
     }
-    @Programmatic
-    public Persona findByNombre(
-            final String nombre
-    ) {
-        return container.uniqueMatch(
-                new org.apache.isis.applib.query.QueryDefault<>(
-                        Persona.class,
-                        "findByNombre",
-                        "nombre", nombre));
-    }
 
-    @Programmatic
-    public java.util.List<Persona> findByNombreContains(
+    /**
+     * Este metodo permite encontrar una Persona en particular
+     * dado un nombre
+     *
+     * @param nombre
+     * @return List<Persona>
+     */
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "2")
+    public List<Persona> buscarPersonaPorNombre(
+            @ParameterLayout(named="Nombre")
             final String nombre
     ) {
-        return container.allMatches(
-                new org.apache.isis.applib.query.QueryDefault<>(
-                        Persona.class,
-                        "findByNombreContains",
-                        "nombre", nombre));
+        TypesafeQuery<Persona> q = isisJdoSupport.newTypesafeQuery(Persona.class);
+        final QPersona cand = QPersona.candidate();
+        q = q.filter(
+                cand.nombre.indexOf(q.stringParameter("nombre")).ne(-1)
+        );
+        return q.setParameter("nombre", nombre.toUpperCase())
+                .executeList();
     }
 
     @Programmatic
@@ -73,16 +78,6 @@ public class PersonaRepository {
         return persona;
     }
 
-    @Programmatic
-    public Persona findOrCreate(
-            final String nombre
-    ) {
-        Persona persona = findByNombre(nombre);
-        if (persona == null) {
-            persona = create(nombre);
-        }
-        return persona;
-    }
 
     @javax.inject.Inject
     @javax.jdo.annotations.NotPersistent
