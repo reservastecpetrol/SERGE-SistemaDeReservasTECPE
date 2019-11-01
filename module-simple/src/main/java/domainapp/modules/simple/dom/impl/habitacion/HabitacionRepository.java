@@ -10,6 +10,15 @@ import org.apache.isis.applib.annotation.Programmatic;
 )
 public class HabitacionRepository {
 
+    /**
+     * Identificacion del nombre del icono que aparecera en la UI
+     *
+     * @return String
+     */
+    public String iconName() {
+        return "Habitacion";
+    }
+
     @Programmatic
     public java.util.List<Habitacion> listAll() {
         return container.allInstances(Habitacion.class);
