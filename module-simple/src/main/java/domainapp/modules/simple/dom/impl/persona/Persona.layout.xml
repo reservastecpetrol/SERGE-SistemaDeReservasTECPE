@@ -16,8 +16,29 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="General">
-                                <cpt:property id="nombre">
-                                    <cpt:action id="updateNombre"/>
+                                <cpt:action id="delete">
+                                    <cpt:describedAs>Deletes this object from the persistent datastore</cpt:describedAs>
+                                </cpt:action>
+                                <cpt:property id="nombre" namedEscaped="true">
+                                    <cpt:action id="updateNombre" promptStyle="INLINE"/>
+                                </cpt:property>
+                                <cpt:property id="apellido" namedEscaped="true">
+                                    <cpt:action id="updateApellido" promptStyle="INLINE"/>
+                                </cpt:property>
+                                <cpt:property id="direccion" namedEscaped="true">
+                                    <cpt:action id="updateDireccion" promptStyle="INLINE"/>
+                                </cpt:property>
+                                <cpt:property id="telefono" namedEscaped="true">
+                                    <cpt:action id="updateTelefono" promptStyle="INLINE"/>
+                                </cpt:property>
+                                <cpt:property id="email" namedEscaped="true">
+                                    <cpt:action id="updateEmail" promptStyle="INLINE"/>
+                                </cpt:property>
+                                <cpt:property id="dni" namedEscaped="true">
+                                    <cpt:action id="updateDni" promptStyle="INLINE"/>
+                                </cpt:property>
+                                <cpt:property id="jerarquia" namedEscaped="true">
+                                    <cpt:action id="updateJerarquia" promptStyle="INLINE"/>
                                 </cpt:property>
                             </cpt:fieldSet>
                         </bs3:col>
