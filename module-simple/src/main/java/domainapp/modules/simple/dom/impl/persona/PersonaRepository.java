@@ -71,6 +71,20 @@ public class PersonaRepository {
     }
 
     @Programmatic
+    public Persona verificarUsuario(String dni){
+
+        TypesafeQuery<Persona> q = isisJdoSupport.newTypesafeQuery(Persona.class);
+        final QPersona cand = QPersona.candidate();
+
+        q= q.filter(
+                cand.dni.eq(q.stringParameter("dniIngresado"))
+        );
+        return  q.setParameter("dniIngresado",dni)
+                .executeUnique();
+    }
+
+
+    @Programmatic
     public Persona create(final String nombre) {
         final Persona persona = container.newTransientInstance(Persona.class);
         persona.setNombre(nombre);
