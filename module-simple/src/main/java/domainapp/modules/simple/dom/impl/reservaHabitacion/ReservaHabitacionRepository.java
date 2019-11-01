@@ -1,11 +1,10 @@
 package domainapp.modules.simple.dom.impl.reservaHabitacion;
 
-import org.apache.isis.applib.annotation.*;
+import org.joda.time.LocalDate;
 
-import javax.jdo.annotations.*;
-
-import lombok.Getter;
-import lombok.Setter;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -13,6 +12,15 @@ import lombok.Setter;
 )
 public class ReservaHabitacionRepository {
 
+    /**
+     * Identificacion del nombre del icono que aparecera en la UI
+     *
+     * @return String
+     */
+    public String iconName() {
+        return "Reserva";
+    }
+    
     @Programmatic
     public java.util.List<ReservaHabitacion> listAll() {
         return container.allInstances(ReservaHabitacion.class);
@@ -45,17 +53,6 @@ public class ReservaHabitacionRepository {
         final ReservaHabitacion reservaHabitacion = container.newTransientInstance(ReservaHabitacion.class);
         reservaHabitacion.setFechaReserva(fechaReserva);
         container.persistIfNotAlready(reservaHabitacion);
-        return reservaHabitacion;
-    }
-
-    @Programmatic
-    public ReservaHabitacion findOrCreate(
-            final LocalDate fechaReserva
-    ) {
-        ReservaHabitacion reservaHabitacion = findByFechaReserva(fechaReserva);
-        if (reservaHabitacion == null) {
-            reservaHabitacion = create(fechaReserva);
-        }
         return reservaHabitacion;
     }
 
