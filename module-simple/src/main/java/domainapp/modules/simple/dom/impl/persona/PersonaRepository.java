@@ -1,8 +1,20 @@
 package domainapp.modules.simple.dom.impl.persona;
 
+import java.util.List;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
+import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.applib.services.repository.RepositoryService;
+
+import lombok.AccessLevel;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -19,11 +31,18 @@ public class PersonaRepository {
         return "Persona";
     }
 
-    @Programmatic
-    public java.util.List<Persona> listAll() {
-        return container.allInstances(Persona.class);
+    /**
+     * Este metodo lista todos las personas que hay registradas
+     * en el sistema
+     *
+     * @return List<Persona>
+     */
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "1")
+    public List<Persona> listarPersonas() {
+        return repositoryService.allInstances(Persona.class);
     }
-
     @Programmatic
     public Persona findByNombre(
             final String nombre
@@ -64,6 +83,17 @@ public class PersonaRepository {
         }
         return persona;
     }
+
+    @javax.inject.Inject
+    @javax.jdo.annotations.NotPersistent
+    @lombok.Getter(AccessLevel.NONE) @lombok.Setter(AccessLevel.NONE)
+    MessageService messageService;
+
+    @javax.inject.Inject
+    RepositoryService repositoryService;
+
+    @javax.inject.Inject
+    IsisJdoSupport isisJdoSupport;
 
     @javax.inject.Inject
     org.apache.isis.applib.DomainObjectContainer container;
