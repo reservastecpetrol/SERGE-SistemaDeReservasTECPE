@@ -22,16 +22,11 @@ import java.util.List;
 
 import org.datanucleus.query.typesafe.TypesafeQuery;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.repository.RepositoryService;
@@ -47,17 +42,19 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 )
 public class SimpleObjects {
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
-    @MemberOrder(sequence = "1")
+    //@Action(semantics = SemanticsOf.SAFE)
+    //@ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    //@MemberOrder(sequence = "1")
+    @Programmatic
     public List<SimpleObject> listAll() {
         return repositoryService.allInstances(SimpleObject.class);
     }
 
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
-    @MemberOrder(sequence = "2")
+    //@Action(semantics = SemanticsOf.SAFE)
+    //@ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    //@MemberOrder(sequence = "2")
+    @Programmatic
     public List<SimpleObject> findByName(
             @ParameterLayout(named="Name")
             final String name
@@ -92,8 +89,9 @@ public class SimpleObjects {
     }
 
     public static class CreateDomainEvent extends ActionDomainEvent<SimpleObjects> {}
-    @Action(domainEvent = CreateDomainEvent.class)
-    @MemberOrder(sequence = "3")
+    //@Action(domainEvent = CreateDomainEvent.class)
+    //@MemberOrder(sequence = "3")
+    @Programmatic
     public SimpleObject create(
             @ParameterLayout(named="Name")
             final String name) {
