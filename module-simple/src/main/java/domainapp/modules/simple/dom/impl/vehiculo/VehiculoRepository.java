@@ -65,6 +65,20 @@ public class VehiculoRepository {
     }
 
     /**
+     * Este metodo lista todos los Vehiculos Disponibles que hay cargados
+     * en el sistema
+     *
+     * @return List<Vehiculo>
+     */
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "2")
+    public List<Vehiculo> listarVehiculosDisponibles() {
+
+        return this.listarVehiculosPorEstado(EstadoVehiculo.DISPONIBLE);
+    }
+
+    /**
      * Este metodo permite recuperar en una lista todos los Vehiculos
      * dado un estado en particular
      *
@@ -97,47 +111,6 @@ public class VehiculoRepository {
         );
         return  q.setParameter("matriculaIngresada",matricula)
                 .executeUnique();
-    }
-
-    @Programmatic
-    public Vehiculo findByMatricula(
-            final String matricula
-    ) {
-        return container.uniqueMatch(
-                new org.apache.isis.applib.query.QueryDefault<>(
-                        Vehiculo.class,
-                        "findByMatricula",
-                        "matricula", matricula));
-    }
-
-    @Programmatic
-    public java.util.List<Vehiculo> findByMatriculaContains(
-            final String matricula
-    ) {
-        return container.allMatches(
-                new org.apache.isis.applib.query.QueryDefault<>(
-                        Vehiculo.class,
-                        "findByMatriculaContains",
-                        "matricula", matricula));
-    }
-
-    @Programmatic
-    public Vehiculo create(final String matricula) {
-        final Vehiculo vehiculo = container.newTransientInstance(Vehiculo.class);
-        vehiculo.setMatricula(matricula);
-        container.persistIfNotAlready(vehiculo);
-        return vehiculo;
-    }
-
-    @Programmatic
-    public Vehiculo findOrCreate(
-            final String matricula
-    ) {
-        Vehiculo vehiculo = findByMatricula(matricula);
-        if (vehiculo == null) {
-            vehiculo = create(matricula);
-        }
-        return vehiculo;
     }
 
     @javax.inject.Inject
