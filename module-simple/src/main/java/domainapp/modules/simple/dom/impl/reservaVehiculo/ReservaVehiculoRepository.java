@@ -3,14 +3,37 @@ package domainapp.modules.simple.dom.impl.reservaVehiculo;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 @DomainService(
-        nature = NatureOfService.DOMAIN,
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "simple.ReservaVehiculoMenu",
         repositoryFor = ReservaVehiculo.class
 )
+@DomainServiceLayout(
+        named = "Reserva Vehiculos",
+        menuOrder = "10"
+)
+
+/**
+ * Esta clase es el servicio de dominio de la clase ReservaVehiculo
+ * que define los metodos
+ * que van a aparecer en el menu del sistema
+ *
+ * @author Cintia Millacura
+ */
 public class ReservaVehiculoRepository {
+
+    /**
+     * Identificacion del nombre del icono que aparecera en la UI
+     *
+     * @return String
+     */
+    public String iconName() {
+        return "Reserva";
+    }
 
     @Programmatic
     public java.util.List<ReservaVehiculo> listAll() {
