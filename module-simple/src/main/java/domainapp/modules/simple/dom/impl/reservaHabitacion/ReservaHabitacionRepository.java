@@ -1,15 +1,32 @@
 package domainapp.modules.simple.dom.impl.reservaHabitacion;
 
-import org.joda.time.LocalDate;
-
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 
 @DomainService(
-        nature = NatureOfService.DOMAIN,
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "simple.ReservaHabitacionMenu",
         repositoryFor = ReservaHabitacion.class
 )
+@DomainServiceLayout(
+        named = "Reservas Habitacion",
+        menuOrder = "10"
+)
+
+/**
+ * Esta clase es el servicio de dominio de la clase ReservaHabitacion
+ * que define los metodos
+ * que van a aparecer en el menu del sistema
+ *
+ * @author Francisco Bellani
+ */
 public class ReservaHabitacionRepository {
 
     /**
@@ -20,41 +37,23 @@ public class ReservaHabitacionRepository {
     public String iconName() {
         return "Reserva";
     }
-    
-    @Programmatic
-    public java.util.List<ReservaHabitacion> listAll() {
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "1")
+    /**
+     * Este metodo lista todas las reservas de habitaciones que hay cargados
+     * en el sistema
+     *
+     * @return List<ReservaHabitacion>
+     */
+    public java.util.List<ReservaHabitacion> listarReservasDeHabitaciones() {
         return container.allInstances(ReservaHabitacion.class);
     }
 
-    @Programmatic
-    public ReservaHabitacion findByFechaReserva(
-            final String fechaReserva
-    ) {
-        return container.uniqueMatch(
-                new org.apache.isis.applib.query.QueryDefault<>(
-                        ReservaHabitacion.class,
-                        "findByFechaReserva",
-                        "fechaReserva", fechaReserva));
-    }
 
-    @Programmatic
-    public java.util.List<ReservaHabitacion> findByFechaReservaContains(
-            final LocalDate fechaReserva
-    ) {
-        return container.allMatches(
-                new org.apache.isis.applib.query.QueryDefault<>(
-                        ReservaHabitacion.class,
-                        "findByFechaReservaContains",
-                        "fechaReserva", fechaReserva));
-    }
 
-    @Programmatic
-    public ReservaHabitacion create(final LocalDate fechaReserva) {
-        final ReservaHabitacion reservaHabitacion = container.newTransientInstance(ReservaHabitacion.class);
-        reservaHabitacion.setFechaReserva(fechaReserva);
-        container.persistIfNotAlready(reservaHabitacion);
-        return reservaHabitacion;
-    }
+
 
     @javax.inject.Inject
     org.apache.isis.applib.DomainObjectContainer container;
