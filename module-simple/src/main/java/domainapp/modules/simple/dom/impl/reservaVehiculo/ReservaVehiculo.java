@@ -7,7 +7,6 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
-import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -24,8 +23,9 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
-        schema = "reservaVehiculo",
-        table = "ReservaVehiculo"
+        schema = "simple",
+        table = "ReservaVehiculo",
+        detachable="true"
 )
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.IDENTITY,
@@ -49,14 +49,40 @@ import lombok.Setter;
                         + "FROM domainapp.modules.simple.dom.impl.reservaVehiculo.ReservaVehiculo "
                         + "WHERE fechaReserva == :fechaReserva ")
 })
-@Unique(name = "ReservaVehiculo_fechaReserva_UNQ", members = { "fechaReserva" })
+//Se comenta de forma que permita realizar varias reservas en una misma fecha
+//@Unique(name = "ReservaVehiculo_fechaReserva_UNQ", members = { "fechaReserva" })
 @DomainObject(
         editing = Editing.DISABLED
 )
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
 )
+@lombok.Getter @lombok.Setter
+
+/**
+ * Esta clase define la entidad de dominio ReservaVehiculo
+ * mediante la cual un usuario puede realizar la reserva de un
+ * Vehiculo dada una fecha de Inicio
+ * En la misma se definen todas sus propiedades y metodos.
+ * Entre los cuales encontramos metodos Constructores,para eliminar un objeto
+ * y metodos para modificar el estado de la reserva.
+ *
+ * @see vehiculo.Vehiculo
+ * @see persona.Persona
+ *
+ * @author Cintia Millacura
+ *
+ */
 public class ReservaVehiculo implements Comparable<ReservaVehiculo> {
+
+    /**
+     * Identificacion del nombre del icono que aparecera en la UI
+     *
+     * @return String
+     */
+    public String iconName() {
+        return "Reserva";
+    }
 
     @Column(allowsNull = "false")
     @Property()
