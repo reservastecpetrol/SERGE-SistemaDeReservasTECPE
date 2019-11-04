@@ -77,7 +77,19 @@ public class ReservaVehiculoRepository {
         return this.listarReservasPorEstado(EstadoReserva.ACTIVA);
     }
 
-
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "3")
+    /**
+     * Este metodo lista todos las Reservas Canceladas que hay cargados
+     * en el sistema
+     *
+     * @return List<ReservaVehiculo>
+     */
+    public List<ReservaVehiculo> listarReservasDeVehiculosCanceladas() {
+        return this.listarReservasPorEstado(EstadoReserva.CANCELADA);
+    }
+    
     /**
      * Este metodo permite recuperar en una lista todos las reservas realizadas
      * dado un estado en particular
