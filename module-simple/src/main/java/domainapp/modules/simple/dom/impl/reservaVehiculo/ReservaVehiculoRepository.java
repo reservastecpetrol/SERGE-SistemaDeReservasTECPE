@@ -178,6 +178,33 @@ public class ReservaVehiculoRepository {
         return reservas;
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "6")
+    /**
+     * Este metodo permite listar todas las reservas de vehiculos
+     * dada una fecha de reserva
+     *
+     * @param fechaReseva
+     * @return List<ReservaVehiculo>
+     */
+    public List<ReservaVehiculo> buscarReservasPorFechaDeReserva(
+            @ParameterLayout(named="Fecha Reserva")
+            final LocalDate fechaReserva
+    ) {
+        List<ReservaVehiculo> reservas;
+
+        TypesafeQuery<ReservaVehiculo> q = isisJdoSupport.newTypesafeQuery(ReservaVehiculo.class);
+
+        final QReservaVehiculo cand = QReservaVehiculo.candidate();
+
+        reservas = q.filter(
+                cand.fechaReserva.eq(q.stringParameter("fecha")))
+                .setParameter("fecha",fechaReserva)
+                .executeList();
+        return reservas;
+    }
+    
     @javax.inject.Inject
     RepositoryService repositoryService;
 
