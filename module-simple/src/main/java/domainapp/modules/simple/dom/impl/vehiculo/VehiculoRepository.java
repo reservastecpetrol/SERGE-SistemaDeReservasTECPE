@@ -1,6 +1,7 @@
 package domainapp.modules.simple.dom.impl.vehiculo;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.datanucleus.query.typesafe.TypesafeQuery;
 
@@ -11,13 +12,15 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.repository.RepositoryService;
-
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+import domainapp.modules.simple.dom.impl.SimpleObjects;
 import domainapp.modules.simple.dom.impl.enums.EstadoVehiculo;
 import lombok.AccessLevel;
 
@@ -136,6 +139,62 @@ public class VehiculoRepository {
         return  q.setParameter("matriculaIngresada",matricula)
                 .executeUnique();
     }
+
+    public static class CreateDomainEvent extends ActionDomainEvent<SimpleObjects> {}
+    @Action(domainEvent = SimpleObjects.CreateDomainEvent.class)
+    @MemberOrder(sequence = "5")
+    /**
+     * Este metodo permite crear la entidad de dominio Vehiculo
+     * con los datos que va a ingresar el usuario
+     *
+     *
+     * @param matricula
+     * @param marca
+     * @param color
+     * @param modelo
+     * @param combustible
+     * @param seguro
+     * @param ubicacion
+     *
+     * @return Vehiculo
+     */
+    public void crearVehiculo(
+            @Parameter(
+                    regexPattern = "[a-z]{2} [0-9]{3} [a-z]{2}",
+                    regexPatternFlags = Pattern.CASE_INSENSITIVE,
+                    regexPatternReplacement = "Ingrese formato AB 123 CD"
+            )
+            @ParameterLayout(named="Matricula") final String matricula,
+            @ParameterLayout(named="Marca")final String marca,
+            @Parameter(
+                    regexPattern = "[A-Za-z ]+",
+                    regexPatternFlags = Pattern.CASE_INSENSITIVE,
+                    regexPatternReplacement = "Ingrese dato correcto"
+            )
+            @ParameterLayout(named="Color")final String color,
+            @Parameter(
+                    regexPattern = "\\w[@&:\\-\\,\\.\\+ \\w]*",
+                    regexPatternFlags = Pattern.CASE_INSENSITIVE,
+                    regexPatternReplacement = "Ingrese dato correcto"
+            )
+            @ParameterLayout(named="Modelo") final String modelo,
+            @ParameterLayout(named="Combustible") final boolean combustible,
+            @ParameterLayout(named="Seguro") final boolean seguro,
+            @ParameterLayout(named="Ubicacion")final String ubicacion
+    )
+    {
+
+        if (verificarVehiculo(matricula.toUpperCase())==null) {
+            EstadoVehiculo estado=EstadoVehiculo.DISPONIBLE;
+
+            repositoryService.persist(new Vehiculo(matricula.toUpperCase(),marca.toUpperCase(),color.toUpperCase(),modelo.toUpperCase(),combustible,seguro,ubicacion.toUpperCase(),estado));
+
+        }else{
+            String mensaje="Este Vehiculo ya se encuentra cargado en el sistema!";
+            messageService.informUser(mensaje);
+        }
+    }
+
 
     @javax.inject.Inject
     @javax.jdo.annotations.NotPersistent
