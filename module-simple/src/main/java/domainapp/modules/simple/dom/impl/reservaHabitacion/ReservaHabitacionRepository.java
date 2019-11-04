@@ -3,6 +3,7 @@ package domainapp.modules.simple.dom.impl.reservaHabitacion;
 import java.util.List;
 
 import org.datanucleus.query.typesafe.TypesafeQuery;
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -22,7 +23,6 @@ import domainapp.modules.simple.dom.impl.enums.EstadoReserva;
 import domainapp.modules.simple.dom.impl.habitacion.HabitacionRepository;
 import domainapp.modules.simple.dom.impl.persona.Persona;
 import domainapp.modules.simple.dom.impl.persona.PersonaRepository;
-import domainapp.modules.simple.dom.impl.reservaVehiculo.QReservaVehiculo;
 import lombok.AccessLevel;
 
 @DomainService(
@@ -155,6 +155,28 @@ public class ReservaHabitacionRepository {
         return reservas;
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "5")
+    /**
+     * Este metodo lista todas las reservas de habitaciones que hay cargados
+     * en el sistema en el dia de la fecha
+     *
+     * @return List<ReservaHabitacion>
+     */
+    public List<ReservaHabitacion> listarReservasQueInicianHoy() {
+
+        List<ReservaHabitacion> reservas;
+
+        TypesafeQuery<ReservaHabitacion> q = isisJdoSupport.newTypesafeQuery(ReservaHabitacion.class);
+
+        final QReservaHabitacion cand = QReservaHabitacion.candidate();
+
+        reservas = q.filter(
+                cand.fechaInicio.eq(LocalDate.now()))
+                .executeList();
+        return reservas;
+    }
 
     @javax.inject.Inject
     RepositoryService repositoryService;
