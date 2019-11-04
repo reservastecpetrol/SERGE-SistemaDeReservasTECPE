@@ -21,7 +21,6 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 import domainapp.modules.simple.dom.impl.enums.EstadoReserva;
 import domainapp.modules.simple.dom.impl.habitacion.HabitacionRepository;
 import domainapp.modules.simple.dom.impl.persona.PersonaRepository;
-import domainapp.modules.simple.dom.impl.reservaVehiculo.QReservaVehiculo;
 import lombok.AccessLevel;
 
 @DomainService(
@@ -65,6 +64,18 @@ public class ReservaHabitacionRepository {
         return container.allInstances(ReservaHabitacion.class);
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "2")
+    /**
+     * Este metodo lista todos las Reservas Activas que hay cargados
+     * en el sistema
+     *
+     * @return List<ReservaHabitacion>
+     */
+    public List<ReservaHabitacion> listarReservasDeHabitacionesActivas() {
+        return this.listarReservasPorEstado(EstadoReserva.ACTIVA);
+    }
 
     /**
      * Este metodo permite recuperar en una lista todos las reservas realizadas
