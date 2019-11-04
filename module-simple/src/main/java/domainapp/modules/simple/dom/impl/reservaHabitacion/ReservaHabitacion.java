@@ -17,17 +17,20 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.title.TitleService;
 
+import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEvent;
+import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
+
 import domainapp.modules.simple.dom.impl.enums.EstadoReserva;
 import domainapp.modules.simple.dom.impl.habitacion.Habitacion;
 import domainapp.modules.simple.dom.impl.persona.Persona;
 import lombok.AccessLevel;
-
 import static org.apache.isis.applib.annotation.SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE;
 
 @PersistenceCapable(
@@ -83,7 +86,7 @@ import static org.apache.isis.applib.annotation.SemanticsOf.NON_IDEMPOTENT_ARE_Y
  *  @author Francisco Bellani
  *
  */
-public class ReservaHabitacion implements Comparable<ReservaHabitacion> {
+public class ReservaHabitacion implements Comparable<ReservaHabitacion>,CalendarEventable {
 
     /**
      * Identificacion del nombre del icono que aparecera en la UI
@@ -159,6 +162,30 @@ public class ReservaHabitacion implements Comparable<ReservaHabitacion> {
         this.estado=estado;
     }
 
+    //Se implememento la interfaz CalendarEventable y se definen los metodos
+    //que deben ser implementados para poder hacer uso del Calendario
+
+    @Programmatic
+    @Override
+    public String getCalendarName() {
+
+        return  getPersona().getJerarquia().name();
+    }
+
+    @Programmatic
+    public String getNotes() {
+
+        return persona.getNombre() + persona.getApellido();
+
+    }
+
+    @Programmatic
+    @Override
+    public CalendarEvent toCalendarEvent() {
+
+        return new CalendarEvent(getFechaInicio().toDateTimeAtStartOfDay(), getCalendarName(), getNotes());
+    }
+    
     /**
      * Este metodo permite cancelar la ReservaHabitacion del sistema
      */
