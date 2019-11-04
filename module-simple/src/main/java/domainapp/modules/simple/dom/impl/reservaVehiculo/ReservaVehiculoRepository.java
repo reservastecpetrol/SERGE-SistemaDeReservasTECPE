@@ -64,7 +64,20 @@ public class ReservaVehiculoRepository {
         return container.allInstances(ReservaVehiculo.class);
     }
 
-    
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "2")
+    /**
+     * Este metodo lista todos las Reservas Activas que hay cargados
+     * en el sistema
+     *
+     * @return List<ReservaVehiculo>
+     */
+    public List<ReservaVehiculo> listarReservasDeVehiculosActivas() {
+        return this.listarReservasPorEstado(EstadoReserva.ACTIVA);
+    }
+
+
     /**
      * Este metodo permite recuperar en una lista todos las reservas realizadas
      * dado un estado en particular
