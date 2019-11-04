@@ -79,6 +79,15 @@ import static org.apache.isis.applib.annotation.SemanticsOf.NON_IDEMPOTENT_ARE_Y
  */
 public class Vehiculo implements Comparable<Vehiculo> {
 
+    /**
+     * Identificacion del nombre del icono que aparecera en la UI
+     *
+     * @return String
+     */
+    public String iconName() {
+        return "Vehiculo";
+    }
+    
     //Definicion de las propiedades de la entidad Vehiculo
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = 40)
@@ -127,6 +136,9 @@ public class Vehiculo implements Comparable<Vehiculo> {
     // DISPONIBLE|| OCUPADO || REPARACION || INACTIVO
     private EstadoVehiculo estado;
 
+    /*
+     *Metodo constructor por defecto
+     */
     public Vehiculo(){}
 
     /**
