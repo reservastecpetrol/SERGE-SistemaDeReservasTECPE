@@ -20,6 +20,7 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.services.i18n.TranslatableString;
 
 import domainapp.modules.simple.dom.impl.enums.EstadoHabitacion;
 import domainapp.modules.simple.dom.impl.enums.TipoHabitacion;
@@ -196,7 +197,40 @@ public class Habitacion implements Comparable<Habitacion> {
         setEstado(estado);
         return this;
     }
-    
+
+    public String default0UpdateNombre() {
+        return getNombre();
+    }
+
+
+    /**
+     * Este metodo realiza la validacion de la variable nombre
+     * de forma que el usuario no ingrese un signo de exclamacion
+     *
+     * @param nombre
+     * @return TranslatableString
+     */
+    public TranslatableString validate0UpdateNombre(final String nombre) {
+        return nombre != null && nombre.contains("!") ? TranslatableString.tr("Exclamation mark is not allowed") : null;
+    }
+
+    public String default0UpdateUbicacion() {
+        return getUbicacion();
+    }
+
+
+    /**
+     * Este metodo realiza la validacion de la variable ubicacion
+     * de forma que el usuario no ingrese un signo de exclamacion
+     *
+     * @param ubicacion
+     * @return TranslatableString
+     */
+    public TranslatableString validate0UpdateUbicacion(final String ubicacion) {
+        return ubicacion != null && ubicacion.contains("!") ? TranslatableString.tr("Exclamation mark is not allowed") : null;
+    }
+
+
     //region > compareTo, toString
     @Override
     public int compareTo(final Habitacion other) {
