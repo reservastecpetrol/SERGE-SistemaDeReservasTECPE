@@ -82,6 +82,21 @@ public class VehiculoRepository {
     }
 
     /**
+     * Este metodo lista todos los Vehiculos Ocupados que hay cargados
+     * en el sistema
+     *
+     * @return List<Vehiculo>
+     */
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "3")
+    public List<Vehiculo> listarVehiculosOcupados() {
+
+        return this.listarVehiculosPorEstado(EstadoVehiculo.OCUPADO);
+    }
+
+    
+    /**
      * Este metodo permite recuperar en una lista todos los Vehiculos
      * dado un estado en particular
      *
