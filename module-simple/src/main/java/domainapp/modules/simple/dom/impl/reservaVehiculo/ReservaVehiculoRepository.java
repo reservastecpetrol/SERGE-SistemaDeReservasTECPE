@@ -1,11 +1,20 @@
 package domainapp.modules.simple.dom.impl.reservaVehiculo;
 
-import org.joda.time.LocalDate;
-
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
+import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.applib.services.repository.RepositoryService;
+
+import domainapp.modules.simple.dom.impl.persona.PersonaRepository;
+import domainapp.modules.simple.dom.impl.vehiculo.VehiculoRepository;
+import lombok.AccessLevel;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -35,41 +44,38 @@ public class ReservaVehiculoRepository {
         return "Reserva";
     }
 
-    @Programmatic
-    public java.util.List<ReservaVehiculo> listAll() {
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "1")
+    /**
+     * Este metodo lista todas las reservas de vehiculos que hay cargados
+     * en el sistema
+     *
+     * @return List<ReservaVehiculo>
+     */
+    public java.util.List<ReservaVehiculo> listarReservasDeVehiculosTotales() {
         return container.allInstances(ReservaVehiculo.class);
     }
 
-    @Programmatic
-    public ReservaVehiculo findByFechaReserva(
-            final String fechaReserva
-    ) {
-        return container.uniqueMatch(
-                new org.apache.isis.applib.query.QueryDefault<>(
-                        ReservaVehiculo.class,
-                        "findByFechaReserva",
-                        "fechaReserva", fechaReserva));
-    }
 
-    @Programmatic
-    public java.util.List<ReservaVehiculo> findByFechaReservaContains(
-            final LocalDate fechaReserva
-    ) {
-        return container.allMatches(
-                new org.apache.isis.applib.query.QueryDefault<>(
-                        ReservaVehiculo.class,
-                        "findByFechaReservaContains",
-                        "fechaReserva", fechaReserva));
-    }
+    @javax.inject.Inject
+    RepositoryService repositoryService;
 
-    @Programmatic
-    public ReservaVehiculo create(final LocalDate fechaReserva) {
-        final ReservaVehiculo reservaVehiculo = container.newTransientInstance(ReservaVehiculo.class);
-        reservaVehiculo.setFechaReserva(fechaReserva);
-        container.persistIfNotAlready(reservaVehiculo);
-        return reservaVehiculo;
-    }
+    @javax.inject.Inject
+    IsisJdoSupport isisJdoSupport;
 
     @javax.inject.Inject
     org.apache.isis.applib.DomainObjectContainer container;
+
+    @javax.inject.Inject
+    PersonaRepository personaRepository;
+
+    @javax.inject.Inject
+    VehiculoRepository vehiculoRepository;
+
+    @javax.inject.Inject
+    @javax.jdo.annotations.NotPersistent
+    @lombok.Getter(AccessLevel.NONE) @lombok.Setter(AccessLevel.NONE)
+    MessageService messageService;
+
 }
