@@ -69,6 +69,20 @@ public class PersonaRepository {
     }
 
     /**
+     * Este metodo lista todas las personas con jerarquia de Ejecutivos que hay cargados
+     * en el sistema
+     *
+     * @return List<Persona>
+     */
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "2")
+    public List<Persona> listarPersonasEjecutivas() {
+
+        return this.listarPersonasPorJerarquia(TipoJerarquia.Ejecutivos);
+    }
+
+    /**
      * Este metodo permite encontrar una Persona en particular
      * dado un nombre
      *
@@ -77,7 +91,7 @@ public class PersonaRepository {
      */
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
-    @MemberOrder(sequence = "2")
+    @MemberOrder(sequence = "3")
     public List<Persona> buscarPersonaPorNombre(
             @ParameterLayout(named="Nombre")
             final String nombre
