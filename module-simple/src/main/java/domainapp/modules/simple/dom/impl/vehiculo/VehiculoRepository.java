@@ -100,6 +100,30 @@ public class VehiculoRepository {
         return vehiculos;
     }
 
+    /**
+     * Este metodo permite encontrar un Vehiculo en particular
+     * dada una matricula que es la que identifica de manera
+     * unica a cada Vehiculo
+     *
+     * @param matricula
+     * @return List<Vehiculo>
+     */
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "4")
+    public List<Vehiculo> buscarVehiculoPorMatricula(
+            @ParameterLayout(named="Matricula")
+            final String matricula
+    ) {
+        TypesafeQuery<Vehiculo> q = isisJdoSupport.newTypesafeQuery(Vehiculo.class);
+        final QVehiculo cand = QVehiculo.candidate();
+        q = q.filter(
+                cand.matricula.indexOf(q.stringParameter("matricula")).ne(-1)
+        );
+        return q.setParameter("matricula", matricula)
+                .executeList();
+    }
+
     @Programmatic
     public Vehiculo verificarVehiculo(String matricula){
 
