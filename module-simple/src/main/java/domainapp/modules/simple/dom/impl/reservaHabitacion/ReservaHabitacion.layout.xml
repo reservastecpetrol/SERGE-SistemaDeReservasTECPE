@@ -16,8 +16,23 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="General">
-                                <cpt:property id="fechaReserva">
-                                    <cpt:action id="updateFechaReserva"/>
+                                <cpt:action id="cancelar">
+                                    <cpt:describedAs>Cancela la reserva realizada en el sistema</cpt:describedAs>
+                                </cpt:action>
+                                <cpt:action id="delete">
+                                    <cpt:describedAs>Deletes this object from the persistent datastore</cpt:describedAs>
+                                </cpt:action>
+                                <cpt:property id="fechaReserva" namedEscaped="true">
+                                </cpt:property>
+                                <cpt:property id="fechaInicio" namedEscaped="true">
+                                </cpt:property>
+                                <cpt:property id="fechaFin" namedEscaped="true">
+                                </cpt:property>
+                                <cpt:property id="habitacion" namedEscaped="true">
+                                </cpt:property>
+                                <cpt:property id="persona" namedEscaped="true">
+                                </cpt:property>
+                                <cpt:property id="estado" namedEscaped="true">
                                 </cpt:property>
                             </cpt:fieldSet>
                         </bs3:col>
