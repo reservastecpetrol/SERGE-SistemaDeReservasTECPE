@@ -15,15 +15,20 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import domainapp.modules.simple.dom.impl.SimpleObjects;
+import domainapp.modules.simple.dom.impl.enums.EstadoHabitacion;
 import domainapp.modules.simple.dom.impl.enums.EstadoReserva;
+import domainapp.modules.simple.dom.impl.habitacion.Habitacion;
 import domainapp.modules.simple.dom.impl.habitacion.HabitacionRepository;
 import domainapp.modules.simple.dom.impl.persona.Persona;
 import domainapp.modules.simple.dom.impl.persona.PersonaRepository;
 import lombok.AccessLevel;
+
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -204,6 +209,113 @@ public class ReservaHabitacionRepository {
                 .executeList();
         return reservas;
     }
+
+    @Programmatic
+    /**
+     * Este metodo lista todos los usuarios que hay en el sistema de
+     * forma que el administrador seleccione a uno en especifico
+     *
+     * @return List<Persona>
+     *
+     */
+    public List<Persona> choices2CrearReservaDeHabitacion() {
+        return personaRepository.listarPersonas();
+    }
+
+
+
+    @Programmatic
+    /**
+     * Este metodo realiza la validacion del ingreso de la fecha de inicio
+     *
+     * @param fechaInicio
+     * @return String
+     */
+    public String validate0CrearReservaDeHabitacion(final LocalDate fechaInicio){
+
+        String validacion="";
+
+        if (fechaInicio.isBefore(LocalDate.now())) {
+            validacion="Una Reserva no puede empezar en el pasado";
+        }
+
+        return validacion;
+    }
+
+
+    @Programmatic
+    /**
+     *Este metodo realiza la validacion del ingreso de la fecha en que finalizaria la reserva
+     *
+     * @param fechaInicio
+     * @param fechaFin
+     *
+     * @return String
+     *
+     */
+    public String validate1CrearReservaDeHabitacion(final LocalDate fechaInicio,final LocalDate fechaFin){
+
+        String validacion="";
+
+        if (fechaFin.isBefore(LocalDate.now())) {
+            validacion="Una Reserva no puede finalizar en el pasado";
+        }else {
+            if (fechaFin.isBefore(fechaInicio)) {
+                validacion = "Una Reserva no puede finalizar antes de la fecha de Inicio";
+            }
+        }
+
+        return validacion;
+    }
+
+
+
+    public static class CreateDomainEvent extends ActionDomainEvent<SimpleObjects> {}
+    @Action(domainEvent = SimpleObjects.CreateDomainEvent.class)
+    @MemberOrder(sequence = "5")
+    /**
+     * Este metodo permite crear la entidad de dominio ReservaHabitacion
+     * con los datos que va a ingresar el usuario
+     *
+     * @param fechaInicio
+     * @param fechaFin
+     * @param persona
+     *
+     */
+    public void crearReservaDeHabitacion(
+
+            @ParameterLayout(named="Fecha Inicio")final LocalDate fechaInicio,
+            @ParameterLayout(named="Fecha Fin")final LocalDate fechaFin,
+            @ParameterLayout(named="Persona")final Persona persona
+    )
+    {
+        ReservaHabitacion reservaHabitacion=new ReservaHabitacion();
+
+        int i=habitacionRepository.listarHabitacionesPorEstado(EstadoHabitacion.DISPONIBLE).size();
+
+        if(i>=1) {
+
+            Habitacion habitacion=habitacionRepository.listarHabitacionesPorEstado(EstadoHabitacion.DISPONIBLE).get(0);
+
+            habitacion.setEstado(EstadoHabitacion.OCUPADA);
+
+            reservaHabitacion.setFechaReserva(LocalDate.now());
+            reservaHabitacion.setFechaInicio(fechaInicio);
+            reservaHabitacion.setFechaFin(fechaFin);
+            reservaHabitacion.setPersona(persona);
+            reservaHabitacion.setHabitacion(habitacion);
+            reservaHabitacion.setEstado(EstadoReserva.ACTIVA);
+
+            repositoryService.persist(reservaHabitacion);
+
+
+        }else {
+            String mensaje="No hay Habitaciones Disponibles";
+            messageService.informUser(mensaje);
+        }
+
+    }
+
 
 
     @javax.inject.Inject
