@@ -1,5 +1,9 @@
 package domainapp.modules.simple.dom.impl.reservaHabitacion;
 
+import java.util.List;
+
+import org.datanucleus.query.typesafe.TypesafeQuery;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -7,8 +11,18 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
+import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
+import domainapp.modules.simple.dom.impl.enums.EstadoReserva;
+import domainapp.modules.simple.dom.impl.habitacion.HabitacionRepository;
+import domainapp.modules.simple.dom.impl.persona.PersonaRepository;
+import domainapp.modules.simple.dom.impl.reservaVehiculo.QReservaVehiculo;
+import lombok.AccessLevel;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -52,9 +66,46 @@ public class ReservaHabitacionRepository {
     }
 
 
+    /**
+     * Este metodo permite recuperar en una lista todos las reservas realizadas
+     * dado un estado en particular
+     *
+     * @param estado
+     * @return List<ReservaHabitacion>
+     */
+    @Programmatic
+    public List<ReservaHabitacion> listarReservasPorEstado(
+            @ParameterLayout(named="Estado")
+            final EstadoReserva estado
+    ) {
+        TypesafeQuery<ReservaHabitacion> tq = isisJdoSupport.newTypesafeQuery(ReservaHabitacion.class);
+        final QReservaHabitacion cand = QReservaHabitacion.candidate();
 
+        List<ReservaHabitacion> reservas = tq.filter(
+                cand.estado.eq(tq.stringParameter("estado")))
+                .setParameter("estado",estado).executeList();
+
+        return reservas;
+    }
 
 
     @javax.inject.Inject
+    RepositoryService repositoryService;
+
+    @javax.inject.Inject
+    IsisJdoSupport isisJdoSupport;
+
+    @javax.inject.Inject
     org.apache.isis.applib.DomainObjectContainer container;
+
+    @javax.inject.Inject
+    PersonaRepository personaRepository;
+
+    @javax.inject.Inject
+    HabitacionRepository habitacionRepository;
+
+    @javax.inject.Inject
+    @javax.jdo.annotations.NotPersistent
+    @lombok.Getter(AccessLevel.NONE) @lombok.Setter(AccessLevel.NONE)
+    MessageService messageService;
 }
