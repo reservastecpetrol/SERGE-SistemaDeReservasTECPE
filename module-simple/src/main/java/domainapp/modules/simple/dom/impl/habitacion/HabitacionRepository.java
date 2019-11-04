@@ -128,7 +128,18 @@ public class HabitacionRepository {
                 .executeList();
     }
 
+    @Programmatic
+    public Habitacion verificarHabitacion(String nombre){
 
+        TypesafeQuery<Habitacion> q = isisJdoSupport.newTypesafeQuery(Habitacion.class);
+        final QHabitacion cand = QHabitacion.candidate();
+
+        q= q.filter(
+                cand.nombre.eq(q.stringParameter("nombreIngresado"))
+        );
+        return  q.setParameter("nombreIngresado",nombre)
+                .executeUnique();
+    }
 
     @javax.inject.Inject
     @javax.jdo.annotations.NotPersistent
