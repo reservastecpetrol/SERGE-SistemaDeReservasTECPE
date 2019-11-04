@@ -2,6 +2,8 @@ package domainapp.modules.simple.dom.impl.habitacion;
 
 import java.util.List;
 
+import org.datanucleus.query.typesafe.TypesafeQuery;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -9,11 +11,14 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import domainapp.modules.simple.dom.impl.enums.EstadoHabitacion;
 import lombok.AccessLevel;
 
 @DomainService(
@@ -48,8 +53,30 @@ public class HabitacionRepository {
     public List<Habitacion> listarHabitacionesTotales() {
         return repositoryService.allInstances(Habitacion.class);
     }
-    
 
+    /**
+     * Este metodo permite recuperar en una lista todos las Habitaciones
+     * dado un estado en particular
+     *
+     * @param estado
+     * @return List<Habitacion>
+     */
+    @Programmatic
+    public List<Habitacion> listarHabitacionesPorEstado(
+            @ParameterLayout(named="Estado")
+            final EstadoHabitacion estado
+    ) {
+        TypesafeQuery<Habitacion> tq = isisJdoSupport.newTypesafeQuery(Habitacion.class);
+        final QHabitacion cand = QHabitacion.candidate();
+
+        List<Habitacion> habitacion = tq.filter(
+                cand.estado.eq(tq.stringParameter("estado")))
+                .setParameter("estado",estado).executeList();
+
+        return habitacion;
+    }
+
+    
     @javax.inject.Inject
     @javax.jdo.annotations.NotPersistent
     @lombok.Getter(AccessLevel.NONE) @lombok.Setter(AccessLevel.NONE)
