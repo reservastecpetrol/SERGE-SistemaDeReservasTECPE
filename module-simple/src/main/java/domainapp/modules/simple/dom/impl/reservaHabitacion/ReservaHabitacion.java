@@ -19,11 +19,16 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.services.title.TitleService;
 
 import domainapp.modules.simple.dom.impl.enums.EstadoReserva;
 import domainapp.modules.simple.dom.impl.habitacion.Habitacion;
 import domainapp.modules.simple.dom.impl.persona.Persona;
+import lombok.AccessLevel;
 
+import static org.apache.isis.applib.annotation.SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
@@ -162,6 +167,15 @@ public class ReservaHabitacion implements Comparable<ReservaHabitacion> {
         this.setEstado(EstadoReserva.CANCELADA);
     }
 
+    /**
+     * Este metodo permite eliminar la entidad de ReservaHabitacion del sistema
+     */
+    @Action(semantics = NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void delete() {
+        final String title = titleService.titleOf(this);
+        messageService.informUser(String.format("'%s' FUE ELIMINADA LA RESERVA", title));
+        repositoryService.remove(this);
+    }
 
     //region > compareTo, toString
     @Override
@@ -174,5 +188,20 @@ public class ReservaHabitacion implements Comparable<ReservaHabitacion> {
         return org.apache.isis.applib.util.ObjectContracts.toString(this, "fechaReserva");
     }
     //endregion
+
+    @javax.inject.Inject
+    @javax.jdo.annotations.NotPersistent
+    @lombok.Getter(AccessLevel.NONE) @lombok.Setter(AccessLevel.NONE)
+    RepositoryService repositoryService;
+
+    @javax.inject.Inject
+    @javax.jdo.annotations.NotPersistent
+    @lombok.Getter(AccessLevel.NONE) @lombok.Setter(AccessLevel.NONE)
+    TitleService titleService;
+
+    @javax.inject.Inject
+    @javax.jdo.annotations.NotPersistent
+    @lombok.Getter(AccessLevel.NONE) @lombok.Setter(AccessLevel.NONE)
+    MessageService messageService;
 
 }
