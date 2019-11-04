@@ -97,6 +97,20 @@ public class PersonaRepository {
     }
 
     /**
+     * Este metodo lista todas las personas con jerarquia de Operadores que hay cargados
+     * en el sistema
+     *
+     * @return List<Persona>
+     */
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "4")
+    public List<Persona> listarPersonasOperadores() {
+
+        return this.listarPersonasPorJerarquia(TipoJerarquia.Operadores);
+    }
+
+    /**
      * Este metodo permite encontrar una Persona en particular
      * dado un nombre
      *
@@ -105,7 +119,7 @@ public class PersonaRepository {
      */
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
-    @MemberOrder(sequence = "4")
+    @MemberOrder(sequence = "5")
     public List<Persona> buscarPersonaPorNombre(
             @ParameterLayout(named="Nombre")
             final String nombre
@@ -158,7 +172,7 @@ public class PersonaRepository {
 
     public static class CreateDomainEvent extends ActionDomainEvent<SimpleObjects> {}
     @Action(domainEvent = SimpleObjects.CreateDomainEvent.class)
-    @MemberOrder(sequence = "3")
+    @MemberOrder(sequence = "6")
     /**
      * Este metodo permite crear la entidad de dominio Persona
      * con los datos que va a ingresar el usuario
