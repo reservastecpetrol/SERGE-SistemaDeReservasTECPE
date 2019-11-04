@@ -31,11 +31,16 @@
                 </bs3:col>
             </bs3:row>
         </bs3:col>
-        <bs3:col span="4" unreferencedCollections="true">
+        <bs3:col span="8" unreferencedCollections="true">
             <bs3:row>
-                <bs3:col span="12">
-                    <collection id="objects" defaultView="table"/>
-                </bs3:col>
+                <bs3:row>
+                    <bs3:col span="3">
+                        <collection id="reservas" defaultView="table"/>
+                    </bs3:col>
+                    <bs3:col span="9">
+                        <collection id="reservas" defaultView="calendar"/>
+                    </bs3:col>
+                </bs3:row>
             </bs3:row>
         </bs3:col>
     </bs3:row>
