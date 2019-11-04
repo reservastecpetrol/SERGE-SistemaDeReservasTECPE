@@ -12,6 +12,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
@@ -22,6 +23,7 @@ import org.apache.isis.applib.annotation.Title;
 import domainapp.modules.simple.dom.impl.enums.EstadoReserva;
 import domainapp.modules.simple.dom.impl.habitacion.Habitacion;
 import domainapp.modules.simple.dom.impl.persona.Persona;
+
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
@@ -70,7 +72,7 @@ import domainapp.modules.simple.dom.impl.persona.Persona;
  * Entre los cuales encontramos metodos Constructores,para eliminar un objeto
  * y metodos para modificar el estado de la reserva.
  *
- * @see vehiculo.Habitacion
+ * @see habitacion.Habitacion
  * @see persona.Persona
  *
  *  @author Francisco Bellani
@@ -150,6 +152,14 @@ public class ReservaHabitacion implements Comparable<ReservaHabitacion> {
         this.persona=persona;
         this.habitacion=habitacion;
         this.estado=estado;
+    }
+
+    /**
+     * Este metodo permite cancelar la ReservaHabitacion del sistema
+     */
+    @Action
+    public void cancelar(){
+        this.setEstado(EstadoReserva.CANCELADA);
     }
 
 
