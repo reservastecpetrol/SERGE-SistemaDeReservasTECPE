@@ -21,11 +21,16 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.services.i18n.TranslatableString;
+import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.services.title.TitleService;
 
 import domainapp.modules.simple.dom.impl.enums.EstadoHabitacion;
 import domainapp.modules.simple.dom.impl.enums.TipoHabitacion;
+import lombok.AccessLevel;
 import static org.apache.isis.applib.annotation.CommandReification.ENABLED;
 import static org.apache.isis.applib.annotation.SemanticsOf.IDEMPOTENT;
+import static org.apache.isis.applib.annotation.SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
@@ -230,6 +235,15 @@ public class Habitacion implements Comparable<Habitacion> {
         return ubicacion != null && ubicacion.contains("!") ? TranslatableString.tr("Exclamation mark is not allowed") : null;
     }
 
+    /**
+     * Este metodo permite eliminar la entidad de Habitacion
+     */
+    @Action(semantics = NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void delete() {
+        final String title = titleService.titleOf(this);
+        messageService.informUser(String.format("'%s' FUE ELIMINADA", title));
+        repositoryService.remove(this);
+    }
 
     //region > compareTo, toString
     @Override
@@ -242,5 +256,20 @@ public class Habitacion implements Comparable<Habitacion> {
         return org.apache.isis.applib.util.ObjectContracts.toString(this, "nombre");
     }
     //endregion
+
+    @javax.inject.Inject
+    @javax.jdo.annotations.NotPersistent
+    @lombok.Getter(AccessLevel.NONE) @lombok.Setter(AccessLevel.NONE)
+    RepositoryService repositoryService;
+
+    @javax.inject.Inject
+    @javax.jdo.annotations.NotPersistent
+    @lombok.Getter(AccessLevel.NONE) @lombok.Setter(AccessLevel.NONE)
+    TitleService titleService;
+
+    @javax.inject.Inject
+    @javax.jdo.annotations.NotPersistent
+    @lombok.Getter(AccessLevel.NONE) @lombok.Setter(AccessLevel.NONE)
+    MessageService messageService;
 
 }
