@@ -14,12 +14,16 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import domainapp.modules.simple.dom.impl.SimpleObjects;
 import domainapp.modules.simple.dom.impl.enums.EstadoHabitacion;
+import domainapp.modules.simple.dom.impl.enums.TipoHabitacion;
 import lombok.AccessLevel;
+
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -140,6 +144,39 @@ public class HabitacionRepository {
         return  q.setParameter("nombreIngresado",nombre)
                 .executeUnique();
     }
+
+    public static class CreateDomainEvent extends ActionDomainEvent<SimpleObjects> {}
+    @Action(domainEvent = SimpleObjects.CreateDomainEvent.class)
+    @MemberOrder(sequence = "5")
+    /**
+     * Este metodo permite crear la entidad de dominio Habitacion
+     * con los datos que va a ingresar el usuario
+     *
+     * @param nombre
+     * @param ubicacion
+     * @param categoris
+     *
+     * @return Habitacion
+     *
+     */
+    public void crearHabitacion(
+            @ParameterLayout(named="Nombre") final String nombre,
+            @ParameterLayout(named="Ubicacion")final String ubicacion,
+            @ParameterLayout(named="Categoria") TipoHabitacion categoria
+    )
+    {
+
+        if (verificarHabitacion(nombre.toUpperCase())==null) {
+            EstadoHabitacion estado=EstadoHabitacion.DISPONIBLE;
+
+            repositoryService.persist(new Habitacion(nombre.toUpperCase(),ubicacion.toUpperCase(),categoria,estado));
+
+        }else{
+            String mensaje="Esta Habitacion ya se encuentra cargada en el sistema!";
+            messageService.informUser(mensaje);
+        }
+    }
+
 
     @javax.inject.Inject
     @javax.jdo.annotations.NotPersistent
