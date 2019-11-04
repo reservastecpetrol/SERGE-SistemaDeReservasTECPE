@@ -19,6 +19,7 @@ import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import domainapp.modules.simple.dom.impl.enums.EstadoReserva;
+import domainapp.modules.simple.dom.impl.persona.Persona;
 import domainapp.modules.simple.dom.impl.persona.PersonaRepository;
 import domainapp.modules.simple.dom.impl.vehiculo.VehiculoRepository;
 import lombok.AccessLevel;
@@ -89,7 +90,7 @@ public class ReservaVehiculoRepository {
     public List<ReservaVehiculo> listarReservasDeVehiculosCanceladas() {
         return this.listarReservasPorEstado(EstadoReserva.CANCELADA);
     }
-    
+
     /**
      * Este metodo permite recuperar en una lista todos las reservas realizadas
      * dado un estado en particular
@@ -112,7 +113,48 @@ public class ReservaVehiculoRepository {
         return reservas;
     }
 
+    @Programmatic
+    /**
+     * Este metodo lista todos los usuarios que hay en el sistema de
+     * forma que el administrador seleccione a uno en especifico
+     *
+     * @return Collection<Persona>
+     *
+     */
+    public List<Persona> choices0ListarReservasDeVehiculosPorPersona() {
+        return personaRepository.listarPersonas();
+    }
 
+    /**
+     * Este metodo permite encontrar todas las reservas
+     * realizadas por un usuario en particular
+     *
+     * @param persona
+     * @return List<ReservaVehiculo>
+     */
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "4")
+    public List<ReservaVehiculo> listarReservasDeVehiculosPorPersona(
+            @ParameterLayout(named="Persona")
+            final Persona persona
+    ) {
+
+        List<ReservaVehiculo> reservas;
+
+        TypesafeQuery<ReservaVehiculo> q = isisJdoSupport.newTypesafeQuery(ReservaVehiculo.class);
+
+        final QReservaVehiculo cand = QReservaVehiculo.candidate();
+
+        reservas= q.filter(
+                cand.persona.dni.eq(q.stringParameter("dniIngresado")))
+                .setParameter("dniIngresado",persona.getDni())
+                .executeList();
+
+        return reservas;
+    }
+
+    
     @javax.inject.Inject
     RepositoryService repositoryService;
 
