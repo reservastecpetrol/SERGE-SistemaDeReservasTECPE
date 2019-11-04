@@ -18,10 +18,13 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.repository.RepositoryService;
-
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+import domainapp.modules.simple.dom.impl.SimpleObjects;
 import domainapp.modules.simple.dom.impl.enums.EstadoReserva;
+import domainapp.modules.simple.dom.impl.enums.EstadoVehiculo;
 import domainapp.modules.simple.dom.impl.persona.Persona;
 import domainapp.modules.simple.dom.impl.persona.PersonaRepository;
+import domainapp.modules.simple.dom.impl.vehiculo.Vehiculo;
 import domainapp.modules.simple.dom.impl.vehiculo.VehiculoRepository;
 import lombok.AccessLevel;
 
@@ -204,7 +207,110 @@ public class ReservaVehiculoRepository {
                 .executeList();
         return reservas;
     }
-    
+
+    @Programmatic
+    /**
+     * Este metodo lista todos los usuarios que hay en el sistema de
+     * forma que el administrador seleccione a uno en especifico
+     *
+     * @return Collection<Persona>
+     *
+     */
+    public List<Persona> choices2CrearReservaDeVehiculo() {
+        return personaRepository.listarPersonas();
+    }
+
+
+
+    @Programmatic
+    /**
+     * Este metodo realiza la validacion del ingreso de la fecha de inicio
+     *
+     * @param fechaInicio
+     * @return String
+     */
+    public String validate0CrearReservaDeVehiculo(final LocalDate fechaInicio){
+
+        String validacion="";
+
+        if (fechaInicio.isBefore(LocalDate.now())) {
+            validacion="Una Reserva no puede empezar en el pasado";
+        }
+
+        return validacion;
+    }
+
+
+    @Programmatic
+    /**
+     *Este metodo realiza la validacion del ingreso de la fecha en que finalizaria la reserva
+     *
+     * @param fechaInicio
+     * @param fechaFin
+     *
+     * @return String
+     *
+     */
+    public String validate1CrearReservaDeVehiculo(final LocalDate fechaInicio,final LocalDate fechaFin){
+
+        String validacion="";
+
+        if (fechaFin.isBefore(LocalDate.now())) {
+            validacion="Una Reserva no puede finalizar en el pasado";
+        }else {
+            if (fechaFin.isBefore(fechaInicio)) {
+                validacion = "Una Reserva no puede finalizar antes de la fecha de Inicio";
+            }
+        }
+
+        return validacion;
+    }
+
+    public static class CreateDomainEvent extends ActionDomainEvent<SimpleObjects> {}
+    @Action(domainEvent = SimpleObjects.CreateDomainEvent.class)
+    @MemberOrder(sequence = "7")
+    /**
+     * Este metodo permite crear la entidad de dominio ReservaVehiculo
+     * con los datos que va a ingresar el usuario
+     *
+     * @param fechaInicio
+     * @param fechaFin
+     * @param persona
+     *
+     */
+    public void crearReservaDeVehiculo(
+
+            @ParameterLayout(named="Fecha Inicio")final LocalDate fechaInicio,
+            @ParameterLayout(named="Fecha Fin")final LocalDate fechaFin,
+            @ParameterLayout(named="Persona")final Persona persona
+    )
+    {
+        ReservaVehiculo reservaVehiculo=new ReservaVehiculo();
+
+        int i=vehiculoRepository.listarVehiculosPorEstado(EstadoVehiculo.DISPONIBLE).size();
+
+        if(i>=1) {
+
+            Vehiculo vehiculo = vehiculoRepository.listarVehiculosPorEstado(EstadoVehiculo.DISPONIBLE).get(0);
+
+            vehiculo.setEstado(EstadoVehiculo.OCUPADO);
+
+            reservaVehiculo.setFechaReserva(LocalDate.now());
+            reservaVehiculo.setFechaInicio(fechaInicio);
+            reservaVehiculo.setFechaFin(fechaFin);
+            reservaVehiculo.setPersona(persona);
+            reservaVehiculo.setVehiculo(vehiculo);
+            reservaVehiculo.setEstado(EstadoReserva.ACTIVA);
+
+            repositoryService.persist(reservaVehiculo);
+
+        }else {
+            String mensaje="No hay Vehiculos Disponibles";
+            messageService.informUser(mensaje);
+        }
+
+    }
+
     @javax.inject.Inject
     RepositoryService repositoryService;
 
