@@ -16,8 +16,20 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="General">
-                                <cpt:property id="nombre">
-                                    <cpt:action id="updateNombre"/>
+                                <cpt:action id="delete">
+                                    <cpt:describedAs>Deletes this object from the persistent datastore</cpt:describedAs>
+                                </cpt:action>
+                                <cpt:property id="nombre" namedEscaped="true">
+                                    <cpt:action id="updateNombre" promptStyle="INLINE"/>
+                                </cpt:property>
+                                <cpt:property id="ubicacion" namedEscaped="true">
+                                    <cpt:action id="updateUbicacion" promptStyle="INLINE"/>
+                                </cpt:property>
+                                <cpt:property id="estado" namedEscaped="true">
+                                    <cpt:action id="updateEstado" promptStyle="INLINE"/>
+                                </cpt:property>
+                                <cpt:property id="categoria" namedEscaped="true">
+                                    <cpt:action id="updateCategoria" promptStyle="INLINE"/>
                                 </cpt:property>
                             </cpt:fieldSet>
                         </bs3:col>
