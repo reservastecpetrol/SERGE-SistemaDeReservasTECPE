@@ -18,7 +18,7 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
-
+import org.apache.isis.applib.annotation.Action;
 import domainapp.modules.simple.dom.impl.enums.EstadoReserva;
 import domainapp.modules.simple.dom.impl.persona.Persona;
 import domainapp.modules.simple.dom.impl.vehiculo.Vehiculo;
@@ -149,6 +149,15 @@ public class ReservaVehiculo implements Comparable<ReservaVehiculo> {
         this.persona=persona;
         this.vehiculo=vehiculo;
         this.estado=estado;
+    }
+
+
+    /**
+     * Este metodo permite cancelar la ReservaVehiculo del sistema
+     */
+    @Action
+    public void cancelar(){
+        this.setEstado(EstadoReserva.CANCELADA);
     }
 
     //region > compareTo, toString
