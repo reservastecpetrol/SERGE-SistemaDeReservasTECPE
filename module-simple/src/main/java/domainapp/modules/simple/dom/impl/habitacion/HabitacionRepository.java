@@ -104,6 +104,31 @@ public class HabitacionRepository {
         return habitacion;
     }
 
+    /**
+     * Este metodo permite encontrar una Habitacion en particular
+     * dado un nombre que identifica de manera
+     * unica a cada Habitacion
+     *
+     * @param nombre
+     * @return List<Habitacion>
+     */
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "4")
+    public List<Habitacion> buscarHabitacionPorNombre(
+            @ParameterLayout(named="Nombre")
+            final String nombre
+    ) {
+        TypesafeQuery<Habitacion> q = isisJdoSupport.newTypesafeQuery(Habitacion.class);
+        final QHabitacion cand = QHabitacion.candidate();
+        q = q.filter(
+                cand.nombre.indexOf(q.stringParameter("nombre")).ne(-1)
+        );
+        return q.setParameter("nombre", nombre)
+                .executeList();
+    }
+
+
 
     @javax.inject.Inject
     @javax.jdo.annotations.NotPersistent
