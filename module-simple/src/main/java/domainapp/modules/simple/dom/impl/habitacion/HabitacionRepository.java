@@ -55,6 +55,20 @@ public class HabitacionRepository {
     }
 
     /**
+     * Este metodo lista todas las Habitaciones Disponibles que hay cargados
+     * en el sistema
+     *
+     * @return List<Habitacion>
+     */
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "2")
+    public List<Habitacion> listarHabitacionesDisponibles() {
+
+        return this.listarHabitacionesPorEstado(EstadoHabitacion.DISPONIBLE);
+    }
+
+    /**
      * Este metodo permite recuperar en una lista todos las Habitaciones
      * dado un estado en particular
      *
@@ -76,7 +90,7 @@ public class HabitacionRepository {
         return habitacion;
     }
 
-    
+
     @javax.inject.Inject
     @javax.jdo.annotations.NotPersistent
     @lombok.Getter(AccessLevel.NONE) @lombok.Setter(AccessLevel.NONE)
