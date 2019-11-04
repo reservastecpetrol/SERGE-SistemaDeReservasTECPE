@@ -1,10 +1,10 @@
 package domainapp.modules.simple.dom.impl.reservaVehiculo;
 
-import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Version;
@@ -17,9 +17,11 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Title;
 
-import lombok.Getter;
-import lombok.Setter;
+import domainapp.modules.simple.dom.impl.enums.EstadoReserva;
+import domainapp.modules.simple.dom.impl.persona.Persona;
+import domainapp.modules.simple.dom.impl.vehiculo.Vehiculo;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
@@ -84,10 +86,70 @@ public class ReservaVehiculo implements Comparable<ReservaVehiculo> {
         return "Reserva";
     }
 
-    @Column(allowsNull = "false")
-    @Property()
-    @Getter @Setter
-    private LocalDate fechaReserva;
+    //Definicion de las propiedades de la entidad ReservaVehiculo
+
+    @javax.jdo.annotations.Column(allowsNull = "false")
+    @lombok.NonNull
+    @Property(editing = Editing.ENABLED)
+    @Title(prepend = "Reserva: ")
+    private LocalDate fechaReserva; //esta variable hace referencia a la fecha en que se realiza la reserva
+
+    @javax.jdo.annotations.Column(allowsNull = "false")
+    @lombok.NonNull
+    @Property(editing = Editing.ENABLED)
+    private LocalDate fechaInicio; //esta variable hace referencia a la fecha de inicio en la cual se va a hacer uso de la reserva
+
+    @javax.jdo.annotations.Column(allowsNull = "false")
+    @lombok.NonNull
+    @Property(editing = Editing.ENABLED)
+    private LocalDate fechaFin; //esta variable hace referencia a la fecha en la que se va a dar fin a la reserva
+
+    @javax.jdo.annotations.Column(allowsNull = "false",name="PERSONA_ID")
+    @Persistent(defaultFetchGroup="true")
+    @lombok.NonNull
+    @Property(editing = Editing.ENABLED)
+    private Persona persona; //esta variable hace referencia al usuario que va a hacer uso de la reserva
+
+    @javax.jdo.annotations.Column(allowsNull = "false",name="VEHICULO_ID")
+    @lombok.NonNull
+    @Property(editing = Editing.ENABLED)
+    private Vehiculo vehiculo; //esta variable hace referencia al Vehiculo que va a ser reservado por el usuario
+
+    @javax.jdo.annotations.Column(allowsNull = "false")
+    @lombok.NonNull
+    @Property(editing = Editing.ENABLED)
+    // esta variable hace referencia al estado en el que se encuentra la reserva realizada por el usuario
+    // los cuales pueden ser :
+    //ACTIVA | CANCELADA | ARRIBADA
+    private EstadoReserva estado;
+
+
+    /**
+     * Este es un metodo constructor por defecto
+     *
+     */
+    public ReservaVehiculo(){}
+
+
+    /**
+     * Este es un metodo constructor con parametros
+     *
+     * @param fechaReserva -valor definido en el codigo
+     * @param fechaInicio -valor ingresado por el usuario
+     * @param fechaFin -valor ingresado por el usuario
+     * @param persona -valor ingresado por el usuario
+     * @param vehiculo -valor definido en el codigo
+     * @param estado -valor definido en el codigo
+     */
+    public ReservaVehiculo(LocalDate fechaReserva,LocalDate fechaInicio,LocalDate fechaFin,
+            Persona persona, Vehiculo vehiculo, EstadoReserva estado){
+        this.fechaReserva=fechaReserva;
+        this.fechaInicio=fechaInicio;
+        this.fechaFin=fechaFin;
+        this.persona=persona;
+        this.vehiculo=vehiculo;
+        this.estado=estado;
+    }
 
     //region > compareTo, toString
     @Override
