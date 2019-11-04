@@ -83,6 +83,20 @@ public class PersonaRepository {
     }
 
     /**
+     * Este metodo lista todas las personas con jerarquia de Supervisores que hay cargados
+     * en el sistema
+     *
+     * @return List<Persona>
+     */
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "3")
+    public List<Persona> listarPersonasSupervisores() {
+
+        return this.listarPersonasPorJerarquia(TipoJerarquia.Supervisores);
+    }
+
+    /**
      * Este metodo permite encontrar una Persona en particular
      * dado un nombre
      *
@@ -91,7 +105,7 @@ public class PersonaRepository {
      */
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
-    @MemberOrder(sequence = "3")
+    @MemberOrder(sequence = "4")
     public List<Persona> buscarPersonaPorNombre(
             @ParameterLayout(named="Nombre")
             final String nombre
