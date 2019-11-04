@@ -1,12 +1,29 @@
 package domainapp.modules.simple.dom.impl.habitacion;
 
+import java.util.List;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
+import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.applib.services.repository.RepositoryService;
+
+import lombok.AccessLevel;
 
 @DomainService(
-        nature = NatureOfService.DOMAIN,
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "simple.HabitacionMenu",
         repositoryFor = Habitacion.class
+)
+@DomainServiceLayout(
+        named = "Habitaciones",
+        menuOrder = "10"
 )
 public class HabitacionRepository {
 
@@ -19,51 +36,30 @@ public class HabitacionRepository {
         return "Habitacion";
     }
 
-    @Programmatic
-    public java.util.List<Habitacion> listAll() {
-        return container.allInstances(Habitacion.class);
+    /**
+     * Este metodo lista todos las Habitaciones que hay cargados
+     * en el sistema
+     *
+     * @return List<Habitacion>
+     */
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "1")
+    public List<Habitacion> listarHabitacionesTotales() {
+        return repositoryService.allInstances(Habitacion.class);
     }
+    
 
-    @Programmatic
-    public Habitacion findByNombre(
-            final String nombre
-    ) {
-        return container.uniqueMatch(
-                new org.apache.isis.applib.query.QueryDefault<>(
-                        Habitacion.class,
-                        "findByNombre",
-                        "nombre", nombre));
-    }
+    @javax.inject.Inject
+    @javax.jdo.annotations.NotPersistent
+    @lombok.Getter(AccessLevel.NONE) @lombok.Setter(AccessLevel.NONE)
+    MessageService messageService;
 
-    @Programmatic
-    public java.util.List<Habitacion> findByNombreContains(
-            final String nombre
-    ) {
-        return container.allMatches(
-                new org.apache.isis.applib.query.QueryDefault<>(
-                        Habitacion.class,
-                        "findByNombreContains",
-                        "nombre", nombre));
-    }
+    @javax.inject.Inject
+    RepositoryService repositoryService;
 
-    @Programmatic
-    public Habitacion create(final String nombre) {
-        final Habitacion habitacion = container.newTransientInstance(Habitacion.class);
-        habitacion.setNombre(nombre);
-        container.persistIfNotAlready(habitacion);
-        return habitacion;
-    }
-
-    @Programmatic
-    public Habitacion findOrCreate(
-            final String nombre
-    ) {
-        Habitacion habitacion = findByNombre(nombre);
-        if (habitacion == null) {
-            habitacion = create(nombre);
-        }
-        return habitacion;
-    }
+    @javax.inject.Inject
+    IsisJdoSupport isisJdoSupport;
 
     @javax.inject.Inject
     org.apache.isis.applib.DomainObjectContainer container;
