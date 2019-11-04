@@ -3,6 +3,7 @@ package domainapp.modules.simple.dom.impl.reservaVehiculo;
 import java.util.List;
 
 import org.datanucleus.query.typesafe.TypesafeQuery;
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -154,7 +155,29 @@ public class ReservaVehiculoRepository {
         return reservas;
     }
 
-    
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "5")
+    /**
+     * Este metodo lista todas las reservas de vehiculos que hay cargados
+     * en el sistema en el dia de la fecha
+     *
+     * @return List<ReservaVehiculo>
+     */
+    public List<ReservaVehiculo> listarReservasQueInicianHoy() {
+
+        List<ReservaVehiculo> reservas;
+
+        TypesafeQuery<ReservaVehiculo> q = isisJdoSupport.newTypesafeQuery(ReservaVehiculo.class);
+
+        final QReservaVehiculo cand = QReservaVehiculo.candidate();
+
+        reservas = q.filter(
+                cand.fechaInicio.eq(LocalDate.now()))
+                .executeList();
+        return reservas;
+    }
+
     @javax.inject.Inject
     RepositoryService repositoryService;
 
