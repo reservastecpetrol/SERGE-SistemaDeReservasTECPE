@@ -10,15 +10,21 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.Title;
 
 import domainapp.modules.simple.dom.impl.enums.EstadoHabitacion;
 import domainapp.modules.simple.dom.impl.enums.TipoHabitacion;
+import static org.apache.isis.applib.annotation.CommandReification.ENABLED;
+import static org.apache.isis.applib.annotation.SemanticsOf.IDEMPOTENT;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
@@ -59,13 +65,10 @@ import domainapp.modules.simple.dom.impl.enums.TipoHabitacion;
 /**
  * Esta clase define la entidad de dominio Habitacion
  * con todas sus propiedades.
- * Ademas de metodos que realizan
- * Validacion de propiedades
- * Actualizacion de propiedades
- * Eliminar una entidad de Habitacion
- * Un metodo Constructor
- *Metodos para modificar los estados de la entidad Habitacion
- *
+ * Ademas de metodos que realizan la validacion de propiedades,
+ * actualizacion de las propiedades y la funcion que permite
+ * eliminar una entidad de Habitacion
+ * Tambien estan definidos los metodos Constructores
  *
  * @author Francisco Bellani
  *
@@ -110,6 +113,9 @@ public class Habitacion implements Comparable<Habitacion> {
     @Property(editing = Editing.ENABLED)
     private TipoHabitacion categoria;
 
+    /**
+     * Este es el metodo constructor por defecto
+     */
     public Habitacion(){}
 
     /**
@@ -128,7 +134,69 @@ public class Habitacion implements Comparable<Habitacion> {
         this.estado=estado;
     }
 
+    /**
+     * Este metodo realiza la actualizacion de la variable nombre
+     *
+     * @param nombre
+     * @return Habitacion
+     */
+    @Action(semantics = IDEMPOTENT, command = ENABLED, publishing = Publishing.ENABLED, associateWith = "nombre")
+    public Habitacion updateNombre(
+            @Parameter(maxLength = 40)
+            @ParameterLayout(named = "nombre")
+            final String nombre) {
+        setNombre(nombre);
+        return this;
+    }
 
+
+    /**
+     * Este metodo realiza la actualizacion de la variable ubicacion
+     *
+     * @param ubicacion
+     * @return Habitacion
+     */
+    @Action(semantics = IDEMPOTENT, command = ENABLED, publishing = Publishing.ENABLED, associateWith ="ubicacion")
+    public Habitacion updateUbicacion(
+            @Parameter(maxLength = 40)
+            @ParameterLayout(named = "Ubicacion")
+            final String ubicacion) {
+        setUbicacion(ubicacion);
+        return this;
+    }
+
+
+    /**
+     * Este metodo realiza la actualizacion de la variable categoria
+     *
+     * @param categoria
+     * @return Habitacion
+     */
+    @Action(semantics = IDEMPOTENT, command = ENABLED, publishing = Publishing.ENABLED, associateWith = "categoria")
+    public TipoHabitacion updateCategoria(
+            @Parameter(maxLength = 40)
+            @ParameterLayout(named = "Categorias")
+            final TipoHabitacion categoria) {
+        setCategoria(categoria);
+        return categoria;
+    }
+
+
+    /**
+     * Este metodo realiza la actualizacion de la variable estado
+     *
+     * @param estado
+     * @return Habitacion
+     */
+    @Action(semantics = IDEMPOTENT, command = ENABLED, publishing = Publishing.ENABLED, associateWith ="estado")
+    public Habitacion updateEstado(
+            @Parameter(maxLength = 40)
+            @ParameterLayout(named = "estado")
+            final EstadoHabitacion estado) {
+        setEstado(estado);
+        return this;
+    }
+    
     //region > compareTo, toString
     @Override
     public int compareTo(final Habitacion other) {
