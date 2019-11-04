@@ -69,14 +69,10 @@ import static org.apache.isis.applib.annotation.SemanticsOf.NON_IDEMPOTENT_ARE_Y
 @lombok.Getter @lombok.Setter
 /**
  * Esta clase define la entidad de dominio Vehiculo
- * con todas sus propiedades.
- * Ademas de metodos que realizan
- * Validacion de propiedades
- * Actualizacion de propiedades
- * Eliminar una entidad de Vehiculo
- * Un metodo Constructor
- *Metodos para modificar los estados de la entidad Vehiculo
- *
+ * con todas sus propiedades y metodos que realizan
+ * Validacion de propiedades,Actualizacion de propiedades
+ * Y permite eliminar una entidad de Vehiculo
+ * Ademas posse los metodos Constructores
  *
  * @author Cintia Millacura
  *
@@ -130,6 +126,8 @@ public class Vehiculo implements Comparable<Vehiculo> {
     // los cuales pueden ser :
     // DISPONIBLE|| OCUPADO || REPARACION || INACTIVO
     private EstadoVehiculo estado;
+
+    public Vehiculo(){}
 
     /**
      *Este es un metodo constructor
