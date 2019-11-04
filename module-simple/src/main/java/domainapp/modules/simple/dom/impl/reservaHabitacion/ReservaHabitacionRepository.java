@@ -178,6 +178,34 @@ public class ReservaHabitacionRepository {
         return reservas;
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "6")
+    /**
+     * Este metodo permite listar todas las reservas de habitaciones
+     * dada una fecha de reserva
+     *
+     * @param fechaReseva
+     * @return List<ReservaHabitacion>
+     */
+    public List<ReservaHabitacion> buscarReservasPorFechaDeReserva(
+            @ParameterLayout(named="Fecha Reserva")
+            final LocalDate fechaReserva
+    ) {
+        List<ReservaHabitacion> reservas;
+
+        TypesafeQuery<ReservaHabitacion> q = isisJdoSupport.newTypesafeQuery(ReservaHabitacion.class);
+
+        final QReservaHabitacion cand = QReservaHabitacion.candidate();
+
+        reservas = q.filter(
+                cand.fechaReserva.eq(q.stringParameter("fecha")))
+                .setParameter("fecha",fechaReserva)
+                .executeList();
+        return reservas;
+    }
+
+
     @javax.inject.Inject
     RepositoryService repositoryService;
 
