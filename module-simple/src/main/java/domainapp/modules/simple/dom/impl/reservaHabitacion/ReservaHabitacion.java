@@ -175,7 +175,7 @@ public class ReservaHabitacion implements Comparable<ReservaHabitacion>,Calendar
     @Programmatic
     public String getNotes() {
 
-        return persona.getNombre() + persona.getApellido();
+        return persona.getNombre()+" "+ persona.getApellido();
 
     }
 
@@ -185,7 +185,7 @@ public class ReservaHabitacion implements Comparable<ReservaHabitacion>,Calendar
 
         return new CalendarEvent(getFechaInicio().toDateTimeAtStartOfDay(), getCalendarName(), getNotes());
     }
-    
+
     /**
      * Este metodo permite cancelar la ReservaHabitacion del sistema
      */
