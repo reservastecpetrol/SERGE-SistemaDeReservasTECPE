@@ -69,6 +69,20 @@ public class HabitacionRepository {
     }
 
     /**
+     * Este metodo lista todas las Habitaciones Ocupadas que hay cargados
+     * en el sistema
+     *
+     * @return List<Habitacion>
+     */
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "3")
+    public List<Habitacion> listarHabitacionesOcupadas() {
+
+        return this.listarHabitacionesPorEstado(EstadoHabitacion.OCUPADA);
+    }
+
+    /**
      * Este metodo permite recuperar en una lista todos las Habitaciones
      * dado un estado en particular
      *
