@@ -20,7 +20,9 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import domainapp.modules.simple.dom.impl.enums.EstadoReserva;
 import domainapp.modules.simple.dom.impl.habitacion.HabitacionRepository;
+import domainapp.modules.simple.dom.impl.persona.Persona;
 import domainapp.modules.simple.dom.impl.persona.PersonaRepository;
+import domainapp.modules.simple.dom.impl.reservaVehiculo.QReservaVehiculo;
 import lombok.AccessLevel;
 
 @DomainService(
@@ -108,6 +110,47 @@ public class ReservaHabitacionRepository {
         List<ReservaHabitacion> reservas = tq.filter(
                 cand.estado.eq(tq.stringParameter("estado")))
                 .setParameter("estado",estado).executeList();
+
+        return reservas;
+    }
+
+    @Programmatic
+    /**
+     * Este metodo lista todos los usuarios que hay en el sistema de
+     * forma que el administrador seleccione a uno en especifico
+     *
+     * @return Collection<Persona>
+     *
+     */
+    public List<Persona> choices0ListarReservasDeHabitacionesPorPersona() {
+        return personaRepository.listarPersonas();
+    }
+
+    /**
+     * Este metodo permite encontrar todas las reservas
+     * realizadas por un usuario en particular
+     *
+     * @param persona
+     * @return List<ReservaHabitacion>
+     */
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "4")
+    public List<ReservaHabitacion> listarReservasDeHabitacionesPorPersona(
+            @ParameterLayout(named="Persona")
+            final Persona persona
+    ) {
+
+        List<ReservaHabitacion> reservas;
+
+        TypesafeQuery<ReservaHabitacion> q = isisJdoSupport.newTypesafeQuery(ReservaHabitacion.class);
+
+        final QReservaHabitacion cand = QReservaHabitacion.candidate();
+
+        reservas= q.filter(
+                cand.persona.dni.eq(q.stringParameter("dniIngresado")))
+                .setParameter("dniIngresado",persona.getDni())
+                .executeList();
 
         return reservas;
     }
