@@ -18,14 +18,15 @@
  */
 package domainapp.application.services.homepage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
-import org.apache.isis.applib.services.i18n.TranslatableString;
 
-import domainapp.modules.simple.dom.impl.SimpleObject;
-import domainapp.modules.simple.dom.impl.SimpleObjects;
+import domainapp.modules.simple.dom.impl.persona.PersonaRepository;
+import domainapp.modules.simple.dom.impl.reservaHabitacion.ReservaHabitacion;
+import domainapp.modules.simple.dom.impl.reservaHabitacion.ReservaHabitacionRepository;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
@@ -33,14 +34,31 @@ import domainapp.modules.simple.dom.impl.SimpleObjects;
 )
 public class HomePageViewModel {
 
-    public TranslatableString title() {
-        return TranslatableString.tr("{num} objects", "num", getObjects().size());
+    public List<ReservaHabitacion> getReservas() {
+        return reservaHabitacionRepository.listarReservasDeHabitacionesActivas();
     }
 
-    public List<SimpleObject> getObjects() {
-        return simpleObjects.listAll();
+    public String title() {
+
+        List<ReservaHabitacion> lista=new ArrayList<ReservaHabitacion>();
+
+        lista=this.getReservas();
+
+        try{
+            if (lista.size()==0) {
+                return "Cargue Usuario y Habitacion primero para realizar una reserva";
+            } else {
+                return "Hay "+lista.size() +" reservas realizadas";
+            }
+        }
+        catch (Exception e){
+            return "Se ha producido un error";
+        }
     }
 
     @javax.inject.Inject
-    SimpleObjects simpleObjects;
+    PersonaRepository personaRepository;
+
+    @javax.inject.Inject
+    ReservaHabitacionRepository reservaHabitacionRepository;
 }
