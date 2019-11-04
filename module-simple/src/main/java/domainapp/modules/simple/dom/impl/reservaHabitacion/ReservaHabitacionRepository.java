@@ -272,7 +272,7 @@ public class ReservaHabitacionRepository {
 
     public static class CreateDomainEvent extends ActionDomainEvent<SimpleObjects> {}
     @Action(domainEvent = SimpleObjects.CreateDomainEvent.class)
-    @MemberOrder(sequence = "5")
+    @MemberOrder(sequence = "7")
     /**
      * Este metodo permite crear la entidad de dominio ReservaHabitacion
      * con los datos que va a ingresar el usuario
